@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biyahero | Welcome, Baguhan! 👋</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css">
+    <style>
+        :root {
+            --green:     #1B4332;
+            --green-mid: #2D6A4F;
+            --green-lt:  #52B788;
+            --gold:      #F4C430;
+            --sky:       #29A9E1;
+            --rose:      #FF6B6B;
+            --bg:        #F7F3EC;
+            --card:      #FDFAF5;
+            --text:      #181818;
+            --muted:     #6B6560;
+            --border:    rgba(27,67,50,0.1);
+            --shadow:    0 6px 32px rgba(27,67,50,0.08);
+            --shadow-lg: 0 20px 60px rgba(27,67,50,0.14);
+            --r:         all 0.28s cubic-bezier(0.4,0,0.2,1);
+        }
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;}
+        h1,h2,h3{font-family:'Fraunces',serif;font-weight:700;}
+        .container{max-width:1100px;margin:0 auto;padding:0 24px;}
+        ::-webkit-scrollbar{width:5px;}
+        ::-webkit-scrollbar-thumb{background:var(--green);border-radius:3px;}
+
+        /* ═══ TICKER ═══ */
+        .ticker{background:var(--green);color:rgba(255,255,255,0.85);font-size:12.5px;font-weight:500;overflow:hidden;white-space:nowrap;padding:8px 0;position:fixed;top:0;width:100%;z-index:1001;}
+        .ticker-inner{display:inline-flex;gap:0;animation:scroll-ticker 50s linear infinite;}
+        .ticker-sep{color:var(--gold);margin:0 20px;opacity:0.7;}
+        @keyframes scroll-ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+        /* ═══ NAV ═══ */
+        .nav{background:var(--green);position:fixed;top:33px;width:100%;z-index:1000;transition:var(--r);border-bottom:1px solid rgba(255,255,255,0.07);}
+        .nav.scrolled{background:rgba(27,67,50,0.97);backdrop-filter:blur(12px);}
+        .nav .container{display:flex;align-items:center;justify-content:space-between;height:60px;}
+        .logo{font-family:'Fraunces',serif;font-size:22px;color:#fff;text-decoration:none;display:flex;align-items:center;gap:3px;font-weight:900;}
+        .logo-accent{color:var(--gold);}
+        .nav-links{display:flex;gap:2px;list-style:none;align-items:center;}
+        .nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;font-weight:600;padding:7px 11px;border-radius:8px;transition:var(--r);}
+        .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.1);}
+        .nav-links a.active{color:var(--gold);}
+        .nav-cta{background:var(--gold);color:var(--green)!important;border-radius:8px!important;font-weight:700!important;}
+        .nav-cta:hover{background:#ffd040!important;}
+        .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:rgba(255,255,255,0.1);border:none;padding:9px;border-radius:8px;}
+        .hamburger span{width:20px;height:2px;background:#fff;border-radius:2px;display:block;}
+        .mobile-nav{display:none;background:#0d3323;padding:16px;flex-direction:column;gap:3px;}
+        .mobile-nav.open{display:flex;}
+        .mobile-nav a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;font-weight:600;padding:11px 16px;border-radius:10px;transition:var(--r);}
+        .mobile-nav a:hover{background:rgba(255,255,255,0.08);}
+
+        /* ═══ HERO ═══ */
+        .hero{min-height:100vh;padding-top:93px;display:flex;align-items:center;position:relative;overflow:hidden;
+            background:linear-gradient(150deg,rgba(13,51,35,0.95) 0%,rgba(27,67,50,0.9) 45%,rgba(45,106,79,0.87) 100%),
+                    url('commuter.jpg') center/cover no-repeat fixed;}
+        .hero-mesh{position:absolute;inset:0;background-image:radial-gradient(ellipse at 20% 50%,rgba(82,183,136,0.18) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(41,169,225,0.1) 0%,transparent 50%),radial-gradient(ellipse at 60% 80%,rgba(244,196,48,0.08) 0%,transparent 50%);pointer-events:none;}
+        .hero-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.05) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;}
+        .hero-content{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:80px 0;}
+        .hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(82,183,136,0.2);border:1px solid rgba(82,183,136,0.35);color:#74d9a8;padding:5px 14px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:22px;}
+        .hero-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:#52B788;animation:blink 2s infinite;}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+        .hero h1{font-size:clamp(2.6rem,5vw,3.8rem);color:#fff;line-height:1.1;margin-bottom:20px;}
+        .hero h1 em{color:var(--gold);font-style:italic;}
+        .hero-sub{color:rgba(255,255,255,0.72);font-size:1.05rem;margin-bottom:36px;max-width:480px;}
+        .hero-btns{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:40px;}
+        .btn-primary{background:var(--gold);color:var(--green);padding:14px 28px;border-radius:12px;font-weight:700;font-size:14.5px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:var(--r);}
+        .btn-primary:hover{background:#ffd040;transform:translateY(-2px);}
+        .btn-ghost{background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);color:#fff;padding:13px 24px;border-radius:12px;font-weight:600;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:var(--r);}
+        .btn-ghost:hover{background:rgba(255,255,255,0.18);}
+        .hero-trust{display:flex;flex-wrap:wrap;gap:16px;}
+        .trust-item{display:flex;align-items:center;gap:7px;color:rgba(255,255,255,0.65);font-size:13px;}
+        .trust-dot{width:8px;height:8px;border-radius:50%;background:var(--green-lt);}
+        /* Hero Right — Visual Cards */
+        .hero-right{display:flex;flex-direction:column;gap:14px;align-items:flex-end;}
+        .hero-card{background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.14);border-radius:16px;padding:18px 22px;display:flex;align-items:center;gap:14px;width:100%;max-width:320px;transition:var(--r);}
+        .hero-card:hover{background:rgba(255,255,255,0.13);}
+        .hero-card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+        .hci-g{background:rgba(82,183,136,0.25);}
+        .hci-y{background:rgba(244,196,48,0.2);}
+        .hci-b{background:rgba(41,169,225,0.2);}
+        .hci-r{background:rgba(255,107,107,0.2);}
+        .hero-card-txt strong{display:block;font-size:1.15rem;font-family:'Fraunces',serif;color:#fff;}
+        .hero-card-txt span{font-size:12px;color:rgba(255,255,255,0.58);}
+
+        /* ═══ SECTION BASE ═══ */
+        .sec{padding:96px 0;}
+        .sec-white{background:#fff;}
+        .sec-dark{background:var(--green);}
+        .sec-hd{text-align:center;margin-bottom:52px;}
+        .sec-chip{display:inline-block;background:rgba(41,169,225,0.1);color:var(--sky);border:1px solid rgba(41,169,225,0.25);padding:4px 14px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;}
+        .sec-dark .sec-chip{background:rgba(244,196,48,0.15);color:var(--gold);border-color:rgba(244,196,48,0.3);}
+        .sec-ttl{font-size:clamp(1.9rem,4vw,2.6rem);margin-bottom:10px;}
+        .sec-ttl-line{display:block;width:40px;height:3px;background:var(--sky);margin:12px auto 0;border-radius:2px;}
+        .sec-dark .sec-ttl{color:#fff;}
+        .sec-dark .sec-ttl-line{background:var(--gold);}
+        .sec-sub{color:var(--muted);max-width:520px;margin:10px auto 0;}
+        .sec-dark .sec-sub{color:rgba(255,255,255,0.6);}
+
+        /* ═══ ABOUT ═══ */
+        .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+        .about-left{}
+        .about-sup{display:inline-block;background:rgba(27,67,50,0.08);color:var(--green);border:1px solid rgba(27,67,50,0.15);padding:4px 14px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:18px;}
+        .about-left h2{font-size:clamp(1.9rem,3.5vw,2.6rem);margin-bottom:16px;line-height:1.2;}
+        .about-left h2 span{color:var(--green-mid);}
+        .about-left p{color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:14px;}
+        .about-features{display:flex;flex-direction:column;gap:12px;margin-top:24px;}
+        .about-feat{display:flex;align-items:flex-start;gap:14px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:16px 18px;transition:var(--r);}
+        .about-feat:hover{border-color:rgba(27,67,50,0.2);box-shadow:var(--shadow);}
+        .about-feat-icon{width:40px;height:40px;border-radius:10px;background:rgba(27,67,50,0.08);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+        .about-feat-body h4{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;margin-bottom:3px;}
+        .about-feat-body p{font-size:13px;color:var(--muted);}
+        /* Visual/Stats block */
+        .about-right{}
+        .about-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+        .about-stat{background:var(--card);border:1.5px solid var(--border);border-radius:18px;padding:24px;text-align:center;box-shadow:var(--shadow);transition:var(--r);}
+        .about-stat:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+        .about-stat .num{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:900;color:var(--green);display:block;}
+        .about-stat .lbl{font-size:12.5px;color:var(--muted);font-weight:600;}
+        .about-map{background:var(--green);border-radius:18px;padding:24px;margin-top:14px;color:#fff;position:relative;overflow:hidden;}
+        .about-map::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:20px 20px;}
+        .about-map-title{font-family:'Fraunces',serif;font-size:1.1rem;margin-bottom:10px;position:relative;}
+        .about-map-nodes{display:flex;flex-wrap:wrap;gap:8px;position:relative;}
+        .map-node{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.85);font-size:12px;font-weight:600;padding:5px 12px;border-radius:100px;display:flex;align-items:center;gap:5px;}
+        .map-node.hub{background:rgba(244,196,48,0.2);border-color:rgba(244,196,48,0.4);color:var(--gold);}
+
+        /* ═══ PARA SA MGA BAGUHAN ═══ */
+        .baguhan-sec{background:var(--green);padding:96px 0;}
+        .steps-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-top:8px;}
+        .step-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:28px;transition:var(--r);position:relative;overflow:hidden;}
+        .step-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+        .step-card.s1::before{background:linear-gradient(90deg,var(--gold),#f9a825);}
+        .step-card.s2::before{background:linear-gradient(90deg,var(--sky),#1976d2);}
+        .step-card.s3::before{background:linear-gradient(90deg,var(--green-lt),#27ae60);}
+        .step-card.s4::before{background:linear-gradient(90deg,var(--rose),#e53935);}
+        .step-card.s5::before{background:linear-gradient(90deg,#a78bfa,#7c3aed);}
+        .step-card.s6::before{background:linear-gradient(90deg,#fb923c,#ea580c);}
+        .step-card:hover{transform:translateY(-6px);background:rgba(255,255,255,0.11);}
+        .step-num{font-family:'Fraunces',serif;font-size:3rem;font-weight:900;color:rgba(255,255,255,0.1);line-height:1;margin-bottom:8px;}
+        .step-card h3{color:#fff;font-size:1.1rem;margin-bottom:10px;}
+        .step-card p{color:rgba(255,255,255,0.68);font-size:13.5px;line-height:1.7;}
+        .step-tag{display:inline-flex;align-items:center;gap:5px;margin-top:14px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px;}
+
+        /* Baguhan Tips List */
+        .tips-list{margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+        .tip-row{display:flex;align-items:flex-start;gap:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px 18px;transition:var(--r);}
+        .tip-row:hover{background:rgba(255,255,255,0.1);}
+        .tip-emoji{font-size:1.4rem;flex-shrink:0;margin-top:1px;}
+        .tip-row h4{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;}
+        .tip-row p{font-size:13px;color:rgba(255,255,255,0.62);}
+
+        /* Vocab section */
+        .vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:40px;}
+        .vocab-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px 18px;transition:var(--r);}
+        .vocab-card:hover{background:rgba(255,255,255,0.12);}
+        .vocab-term{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--gold);margin-bottom:4px;}
+        .vocab-def{font-size:12.5px;color:rgba(255,255,255,0.65);}
+
+        /* ═══ FIRST-TIME VISITOR ═══ */
+        .ftv-sec{background:var(--bg);padding:96px 0;}
+        .ftv-hero{background:var(--card);border:1.5px solid var(--border);border-radius:26px;padding:48px;box-shadow:var(--shadow-lg);margin-bottom:52px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
+        .ftv-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.25);color:var(--rose);padding:5px 14px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:18px;}
+        .ftv-hero h2{font-size:clamp(1.9rem,3.5vw,2.5rem);margin-bottom:14px;line-height:1.2;}
+        .ftv-hero h2 em{color:var(--green-mid);font-style:italic;}
+        .ftv-hero p{color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:22px;}
+        .ftv-quick-links{display:flex;flex-wrap:wrap;gap:10px;}
+        .ftv-link{background:rgba(27,67,50,0.08);border:1.5px solid rgba(27,67,50,0.12);color:var(--green);padding:8px 16px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;transition:var(--r);}
+        .ftv-link:hover{background:var(--green);color:#fff;}
+        .ftv-checklist{background:var(--bg);border-radius:18px;padding:24px;}
+        .ftv-checklist h3{font-size:1.1rem;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+        .check-items{display:flex;flex-direction:column;gap:10px;}
+        .check-item{display:flex;align-items:center;gap:12px;background:#fff;border-radius:10px;padding:12px 15px;border:1.5px solid var(--border);cursor:pointer;transition:var(--r);}
+        .check-item:hover{border-color:rgba(27,67,50,0.2);}
+        .check-item.checked{background:rgba(27,67,50,0.04);border-color:rgba(82,183,136,0.3);}
+        .check-item.checked .chk-box{background:var(--green-lt);border-color:var(--green-lt);}
+        .check-item.checked .chk-box::after{content:'✓';color:#fff;font-size:11px;font-weight:800;}
+        .chk-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--r);}
+        .check-item span{font-size:13.5px;font-weight:600;transition:var(--r);}
+        .check-item.checked span{text-decoration:line-through;color:var(--muted);}
+
+        /* Scenario Cards */
+        .scenarios-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;margin-top:8px;}
+        .scenario-card{background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:28px;box-shadow:var(--shadow);transition:var(--r);position:relative;overflow:hidden;}
+        .scenario-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--sky));}
+        .scenario-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);}
+        .scenario-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+        .scenario-icon{width:48px;height:48px;border-radius:14px;background:rgba(27,67,50,0.08);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+        .scenario-head h3{font-size:1rem;line-height:1.3;}
+        .scenario-steps{display:flex;flex-direction:column;gap:8px;}
+        .sc-step{display:flex;gap:10px;align-items:flex-start;}
+        .sc-num{width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+        .sc-step p{font-size:13px;color:var(--muted);line-height:1.6;}
+        .scenario-tag{margin-top:16px;display:inline-flex;align-items:center;gap:5px;background:rgba(41,169,225,0.08);border:1px solid rgba(41,169,225,0.2);color:var(--sky);font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px;}
+
+        /* Do's and Don'ts */
+        .dos-donts{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:52px;}
+        .dd-card{border-radius:20px;padding:32px;box-shadow:var(--shadow);}
+        .dd-card.dos{background:rgba(82,183,136,0.08);border:1.5px solid rgba(82,183,136,0.2);}
+        .dd-card.donts{background:rgba(255,107,107,0.07);border:1.5px solid rgba(255,107,107,0.2);}
+        .dd-head{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+        .dd-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+        .dd-card.dos .dd-icon{background:rgba(82,183,136,0.15);}
+        .dd-card.donts .dd-icon{background:rgba(255,107,107,0.12);}
+        .dd-head h3{font-size:1.1rem;}
+        .dd-card.dos .dd-head h3{color:var(--green-mid);}
+        .dd-card.donts .dd-head h3{color:var(--rose);}
+        .dd-list{display:flex;flex-direction:column;gap:10px;}
+        .dd-item{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--muted);}
+        .dd-item::before{content:'✔';font-size:11px;font-weight:800;color:var(--green-lt);flex-shrink:0;margin-top:3px;}
+        .dd-card.donts .dd-item::before{content:'✖';color:var(--rose);}
+
+        /* CTA banner */
+        .cta-banner{background:var(--green);border-radius:26px;padding:56px 48px;text-align:center;margin-top:80px;position:relative;overflow:hidden;}
+        .cta-banner::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:24px 24px;}
+        .cta-banner h2{font-size:clamp(1.8rem,4vw,2.6rem);color:#fff;margin-bottom:12px;position:relative;}
+        .cta-banner h2 em{color:var(--gold);font-style:italic;}
+        .cta-banner p{color:rgba(255,255,255,0.65);font-size:15px;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;position:relative;}
+        .cta-btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;}
+
+        /* ═══ FOOTER ═══ */
+        .footer{background:#0a2618;padding:56px 0 0;}
+        .footer-inner{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:48px;padding-bottom:48px;}
+        .footer-brand h3{font-family:'Fraunces',serif;font-size:1.5rem;color:#fff;margin-bottom:12px;}
+        .footer-brand h3 span{color:var(--gold);}
+        .footer-brand p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.8;max-width:280px;}
+        .footer-col h4{font-size:12px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;}
+        .footer-links{list-style:none;display:flex;flex-direction:column;gap:8px;}
+        .footer-links a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:13.5px;transition:color 0.2s;}
+        .footer-links a:hover{color:#fff;}
+        .footer-bottom{border-top:1px solid rgba(255,255,255,0.07);padding:18px 0;text-align:center;}
+        .footer-bottom p{font-size:12px;color:rgba(255,255,255,0.3);}
+
+        /* ═══ BACK TO TOP ═══ */
+        .back-top{position:fixed;bottom:32px;right:32px;width:42px;height:42px;background:var(--green);color:#fff;border:none;border-radius:12px;cursor:pointer;font-size:18px;box-shadow:var(--shadow);display:none;align-items:center;justify-content:center;z-index:800;transition:var(--r);}
+        .back-top.show{display:flex;}
+        .back-top:hover{background:var(--sky);}
+
+        /* ═══ ANIMATIONS ═══ */
+        .fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.65s ease-out,transform 0.65s ease-out;}
+        .fade-in.vis{opacity:1;transform:none;}
+
+        /* ═══ RESPONSIVE ═══ */
+        @media(max-width:1024px){
+            .hero-content{grid-template-columns:1fr;text-align:center;gap:32px;}
+            .hero-right{flex-direction:row;flex-wrap:wrap;justify-content:center;}
+            .hero-card{flex:1;min-width:180px;}
+            .about-grid{grid-template-columns:1fr;}
+            .ftv-hero{grid-template-columns:1fr;}
+            .dos-donts{grid-template-columns:1fr;}
+            .footer-inner{grid-template-columns:1fr 1fr;gap:32px;}
+        }
+        @media(max-width:680px){
+            .nav-links{display:none;}
+            .hamburger{display:flex;}
+            .tips-list{grid-template-columns:1fr;}
+            .footer-inner{grid-template-columns:1fr;}
+            .cta-banner{padding:40px 24px;}
+            .about-stat-grid{grid-template-columns:1fr 1fr;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- Ticker -->
+<div class="ticker">
+    <span class="ticker-inner">
+        <span>🎉 Maligayang pagdating sa Biyahero — ang iyong gabay sa commute sa SJDM!</span>
+        <span class="ticker-sep">•</span>
+        <span>🆕 Baguhan ka? Basahin ang "Para sa mga Baguhan" guide bago maglakbay!</span>
+        <span class="ticker-sep">•</span>
+        <span>💡 Tip #1: Laging may barya — jeepney at tricycle ay bihirang magbigay ng sukli sa ₱100+</span>
+        <span class="ticker-sep">•</span>
+        <span>🚎 Tungko Terminal ang pangunahing hub — dito pwede pumunta kahit saan sa SJDM</span>
+        <span class="ticker-sep">•</span>
+        <span>🌿 Libre itong gabay — ibahagi sa mga kaibigan at kapitbahay!</span>
+        <span class="ticker-sep">•</span>
+        <span>🎉 Maligayang pagdating sa Biyahero — ang iyong gabay sa commute sa SJDM!</span>
+        <span class="ticker-sep">•</span>
+        <span>🆕 Baguhan ka? Basahin ang "Para sa mga Baguhan" guide bago maglakbay!</span>
+        <span class="ticker-sep">•</span>
+        <span>💡 Tip #1: Laging may barya — jeepney at tricycle ay bihirang magbigay ng sukli sa ₱100+</span>
+        <span class="ticker-sep">•</span>
+        <span>🚎 Tungko Terminal ang pangunahing hub — dito pwede pumunta kahit saan sa SJDM</span>
+        <span class="ticker-sep">•</span>
+        <span>🌿 Libre itong gabay — ibahagi sa mga kaibigan at kapitbahay!</span>
+    </span>
+</div>
+
+<!-- Nav -->
+<nav class="nav" id="mainNav">
+    <div class="container">
+        <a href="login.html" class="logo">Biya<span class="logo-accent">hero</span></a>
+        <ul class="nav-links">
+            <li><a href="#about" class="active">About</a></li>
+            <li><a href="#baguhan">Baguhan Guide</a></li>
+            <li><a href="#firsttime">First-Time Visitor</a></li>
+            <li><a href="login.html" class="nav-cta">🗺️ Go to Full Guide</a></li>
+        </ul>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mobile-nav" id="mobileMenu">
+        <a href="#about">About Biyahero</a>
+        <a href="#baguhan">Para sa mga Baguhan</a>
+        <a href="#firsttime">First-Time Visitor</a>
+        <a href="login.html">🗺️ Full Commute Guide</a>
+    </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+    <div class="hero-mesh"></div>
+    <div class="hero-dots"></div>
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-left">
+                <div class="hero-tag">✨ Free · Community-powered · SJDM</div>
+                <h1>Kumusta, <em>Bisita!</em><br>Welcome to Biyahero</h1>
+                <p class="hero-sub">Ang Biyahero ay libreng commuting guide para sa lahat ng gustong maglakbay nang mas madali, mas ligtas, at mas kampante sa loob ng San Jose del Monte, Bulacan.</p>
+                <div class="hero-btns">
+                    <a href="#baguhan" class="btn-primary">📖 Baguhan Guide</a>
+                    <a href="login.html" class="btn-ghost">🗺️ Full Guide</a>
+                </div>
+                <div class="hero-trust">
+                    <div class="trust-item"><span class="trust-dot"></span> 100% Libre</div>
+                    <div class="trust-item"><span class="trust-dot"></span> Para sa lahat</div>
+                    <div class="trust-item"><span class="trust-dot"></span> Community-made</div>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="hero-card">
+                    <div class="hero-card-icon hci-g">🗺️</div>
+                    <div class="hero-card-txt">
+                        <strong>8+ Routes</strong>
+                        <span>Popular commute paths</span>
+                    </div>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-card-icon hci-y">💰</div>
+                    <div class="hero-card-txt">
+                        <strong>Fare Calc</strong>
+                        <span>₱13–₱85 estimates</span>
+                    </div>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-card-icon hci-b">🗓️</div>
+                    <div class="hero-card-txt">
+                        <strong>Commute Planner</strong>
+                        <span>Step-by-step schedule</span>
+                    </div>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-card-icon hci-r">🚨</div>
+                    <div class="hero-card-txt">
+                        <strong>Emergency</strong>
+                        <span>SJDM hotlines</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about" class="sec sec-white">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-left fade-in">
+                <div class="about-sup">🌿 Tungkol sa Amin</div>
+                <h2>Ano ang <span>Biyahero</span>?</h2>
+                <p>Ang Biyahero ay isang libreng online na gabay na espesyal na ginawa para sa mga manlalakbay sa loob ng San Jose del Monte (SJDM), Bulacan. Dito, makikita mo ang lahat ng kailangan mo para makapag-commute nang walang stress.</p>
+                <p>Hindi kailangan ng app. Hindi kailangan ng bayad. Buksan lang, basahin, at lakbay na!</p>
+                <div class="about-features">
+                    <div class="about-feat">
+                        <div class="about-feat-icon">🗺️</div>
+                        <div class="about-feat-body">
+                            <h4>Routes & Directions</h4>
+                            <p>Step-by-step direksyon sa pagitan ng mga barangay at terminal ng SJDM.</p>
+                        </div>
+                    </div>
+                    <div class="about-feat">
+                        <div class="about-feat-icon">💰</div>
+                        <div class="about-feat-body">
+                            <h4>Fare Calculator</h4>
+                            <p>I-estimate ang iyong pamasahe bago pa man umalis sa bahay.</p>
+                        </div>
+                    </div>
+                    <div class="about-feat">
+                        <div class="about-feat-icon">🌤️</div>
+                        <div class="about-feat-body">
+                            <h4>Weather & Rush Hour Alerts</h4>
+                            <p>Alamin kung kelan pinaka-maayos na mag-commute para maiwasan ang trapik.</p>
+                        </div>
+                    </div>
+                    <div class="about-feat">
+                        <div class="about-feat-icon">🚨</div>
+                        <div class="about-feat-body">
+                            <h4>Emergency Hotlines</h4>
+                            <p>SJDM police, BFP, at CDRRMO — lahat nasa isang lugar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-right fade-in">
+                <div class="about-stat-grid">
+                    <div class="about-stat">
+                        <span class="num">8+</span>
+                        <span class="lbl">Commute Routes</span>
+                    </div>
+                    <div class="about-stat">
+                        <span class="num">4</span>
+                        <span class="lbl">Transport Types</span>
+                    </div>
+                    <div class="about-stat">
+                        <span class="num">5</span>
+                        <span class="lbl">Major Terminals</span>
+                    </div>
+                    <div class="about-stat">
+                        <span class="num">100%</span>
+                        <span class="lbl">Free to Use</span>
+                    </div>
+                </div>
+                <div class="about-map">
+                    <div class="about-map-title">🗺️ SJDM Major Terminals</div>
+                    <div class="about-map-nodes">
+                        <div class="map-node hub">🟡 Tungko</div>
+                        <div class="map-node hub">🟡 Muzon</div>
+                        <div class="map-node hub">🟡 SJDM Bayan</div>
+                        <div class="map-node">🟢 Kaypian</div>
+                        <div class="map-node">🟢 Sapang Palay</div>
+                        <div class="map-node">🟢 Grotto</div>
+                        <div class="map-node">🔵 Bagong Buhay</div>
+                        <div class="map-node">🔵 Citrus</div>
+                        <div class="map-node">🔵 Fatima</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ PARA SA MGA BAGUHAN ═══ -->
+<section id="baguhan" class="baguhan-sec">
+    <div class="container">
+        <div class="sec-hd">
+            <div class="sec-chip">🆕 Para sa mga Baguhan</div>
+            <h2 class="sec-ttl" style="color:#fff;">Gabay para sa<br><em style="color:var(--gold);font-style:italic;">Unang Beses na Commuter</em></h2>
+            <span class="sec-ttl-line" style="background:var(--gold);"></span>
+            <p class="sec-sub" style="color:rgba(255,255,255,0.6);margin-top:14px;">Hindi ka pa nakasakay ng jeepney o tricycle sa SJDM? Heto ang 6 simpleng hakbang para makapagsimula!</p>
+        </div>
+
+        <div class="steps-wrap">
+            <div class="step-card s1 fade-in">
+                <div class="step-num">01</div>
+                <h3>Alamin ang Iyong Destinasyon</h3>
+                <p>Bago umalis, siguraduhing alam mo ang pangalan ng lugar na pupuntahan mo. Hanapin ito sa <strong>Routes</strong> section ng Biyahero para makita ang pinakamaikling daan.</p>
+                <div class="step-tag">💡 Tip: I-screenshot ang route bago umalis</div>
+            </div>
+            <div class="step-card s2 fade-in">
+                <div class="step-num">02</div>
+                <h3>Pumunta sa Pinakamalapit na Terminal</h3>
+                <p>Ang karamihan ng commute sa SJDM ay nagsisimula sa <strong>Tungko Terminal</strong>, <strong>Muzon Junction</strong>, o <strong>SJDM Bayan (City Hall)</strong>. Tricycle maaaring sakay papunta dito mula sa subdivision.</p>
+                <div class="step-tag">🚏 Tingnan: Terminal Guide section</div>
+            </div>
+            <div class="step-card s3 fade-in">
+                <div class="step-num">03</div>
+                <h3>Sumakay ng Tamang Jeepney</h3>
+                <p>Ang jeepney ay may nakasulat na ruta sa harap. Basahin ito at siguraduhing pumapasa ito sa iyong destinasyon. Kung hindi ka sigurado, magtanong sa kapwa pasahero.</p>
+                <div class="step-tag">🚎 Sabihin: "Manong, papunta po ba kayo sa ___?"</div>
+            </div>
+            <div class="step-card s4 fade-in">
+                <div class="step-num">04</div>
+                <h3>Bayaran ang Pamasahe</h3>
+                <p>Kapag nasa loob na ng jeepney, ipasa ang iyong pamasahe pababa (sa pamamagitan ng kapwa pasahero) papunta sa driver. Sabihin ang iyong babaan para maibigay ang tamang sukli.</p>
+                <div class="step-tag">💰 Jeepney: ₱13–₱25 | Tricycle: ₱30–₱85</div>
+            </div>
+            <div class="step-card s5 fade-in">
+                <div class="step-num">05</div>
+                <h3>Sabihin ang Iyong Babaan</h3>
+                <p>Kapag malapit na sa destinasyon, sabihing <strong>"Para po!"</strong> (o "Lugar lang po!") para huminto ang jeepney. Sa tricycle, sabihin lang ang address o landmark.</p>
+                <div class="step-tag">🗣️ "Para po!" = Please stop here</div>
+            </div>
+            <div class="step-card s6 fade-in">
+                <div class="step-num">06</div>
+                <h3>Huwag Mahiya Magtanong</h3>
+                <p>Ang mga taga-SJDM ay karaniwang matulungin. Kung naliligaw ka, magtanong sa kapwa pasahero, driver, o sa mga tao sa terminal. Mas mabuting magtanong kaysa maligaw!</p>
+                <div class="step-tag">🤝 Ang tanong ay hindi kahihiyan</div>
+            </div>
+        </div>
+
+        <!-- Survival Phrases -->
+        <div class="sec-hd" style="margin-top:72px;margin-bottom:24px;">
+            <div class="sec-chip">🗣️ Kailangan Mong Malaman</div>
+            <h2 class="sec-ttl" style="color:#fff;font-size:1.8rem;">Mga Salitang Gagamitin Mo</h2>
+            <span class="sec-ttl-line" style="background:var(--gold);"></span>
+        </div>
+        <div class="vocab-grid">
+            <div class="vocab-card">
+                <div class="vocab-term">"Para po!"</div>
+                <div class="vocab-def">Huminto na dito! Susunod na bababa si passenger.</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-term">"Bayad po"</div>
+                <div class="vocab-def">Ibinibigay ang pamasahe (ipasa pababa).</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-term">"Sukli po"</div>
+                <div class="vocab-def">Hinihingi ang sukli mula sa driver.</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-term">"Pasada"</div>
+                <div class="vocab-def">Ang ruta ng jeepney — nakasulat sa harap.</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-term">"Barya"</div>
+                <div class="vocab-def">Piso/sentimo — laging magdala para sa exact fare.</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-term">"Hub" / "Terminal"</div>
+                <div class="vocab-def">Pangunahing hintuan kung saan sumasakay/bumababa.</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-term">"Transfer"</div>
+                <div class="vocab-def">Lumipat ng sasakyan — karaniwan sa Tungko o Muzon.</div>
+            </div>
+            <div class="vocab-card">
+                <div class="vocab-term">"Last trip"</div>
+                <div class="vocab-def">Huling biyahe ng sasakyan para sa araw na iyon.</div>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="sec-hd" style="margin-top:72px;margin-bottom:24px;">
+            <div class="sec-chip">⚡ Quick Tips</div>
+            <h2 class="sec-ttl" style="color:#fff;font-size:1.8rem;">Mga Importanteng Alituntunin</h2>
+            <span class="sec-ttl-line" style="background:var(--gold);"></span>
+        </div>
+        <div class="tips-list">
+            <div class="tip-row">
+                <div class="tip-emoji">💵</div>
+                <div>
+                    <h4>Laging may barya</h4>
+                    <p>Bihirang magbigay ng sukli sa ₱100 ang mga driver. Magdala ng ₱20 at ₱10 na piso.</p>
+                </div>
+            </div>
+            <div class="tip-row">
+                <div class="tip-emoji">⏰</div>
+                <div>
+                    <h4>Iwasan ang rush hour</h4>
+                    <p>6–9 AM at 5–8 PM ay pinaka-siksik. Umalis nang mas maaga o mas late kung posible.</p>
+                </div>
+            </div>
+            <div class="tip-row">
+                <div class="tip-emoji">🌧️</div>
+                <div>
+                    <h4>Magdala ng payong</h4>
+                    <p>Sa ulan, mabagal ang trapik at mabilis na mapuno ang jeepney. Laging handa.</p>
+                </div>
+            </div>
+            <div class="tip-row">
+                <div class="tip-emoji">📱</div>
+                <div>
+                    <h4>I-screenshot ang route</h4>
+                    <p>Huwag umasa sa internet habang nasa daan. I-save ang direksyon bago umalis.</p>
+                </div>
+            </div>
+            <div class="tip-row">
+                <div class="tip-emoji">🎒</div>
+                <div>
+                    <h4>Bantayan ang gamit</h4>
+                    <p>Itago ang cellphone at pitaka sa hindi kapansin-pansing lugar habang nasa jeepney.</p>
+                </div>
+            </div>
+            <div class="tip-row">
+                <div class="tip-emoji">🗺️</div>
+                <div>
+                    <h4>Tungko ang pangunahing hub</h4>
+                    <p>Kung hindi ka sure kung saan, pumunta muna sa Tungko Terminal — halos lahat ng ruta ay dumaan dito.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FIRST-TIME VISITOR ═══ -->
+<section id="firsttime" class="ftv-sec">
+    <div class="container">
+        <div class="sec-hd">
+            <div class="sec-chip">🏠 First-Time Visitor</div>
+            <h2 class="sec-ttl">Unang Beses sa <em style="font-style:italic;color:var(--green-mid);">SJDM?</em></h2>
+            <span class="sec-ttl-line"></span>
+            <p class="sec-sub">Heto ang lahat ng kailangan mong malaman bago at habang nandito ka — mula orientation hanggang praktikal na mga hakbang.</p>
+        </div>
+
+        <!-- Orientation Banner -->
+        <div class="ftv-hero fade-in">
+            <div>
+                <div class="ftv-badge">👋 Welcome, Bisita!</div>
+                <h2>Ang San Jose del Monte, <em>Bulacan</em></h2>
+                <p>Ang SJDM ay isang mabilis na lumalaking lungsod sa hilaga ng Metro Manila. Ito ay kilala sa maraming subdivision at residential areas. Ang pangunahing paraan ng transportasyon ay jeepney, tricycle, at multicab.</p>
+                <div class="ftv-quick-links">
+                    <a href="login.html" class="ftv-link">🗺️ Mga Routes</a>
+                    <a href="login.html" class="ftv-link">💰 Fare Calc</a>
+                    <a href="login.html" class="ftv-link">🏢 Terminals</a>
+                    <a href="login.html" class="ftv-link">🚨 Emergency</a>
+                </div>
+            </div>
+            <div class="ftv-checklist">
+                <h3>✅ Pre-Commute Checklist</h3>
+                <div class="check-items">
+                    <div class="check-item" onclick="this.classList.toggle('checked')">
+                        <div class="chk-box"></div>
+                        <span>May barya na (₱20, ₱10, ₱5 coins)</span>
+                    </div>
+                    <div class="check-item" onclick="this.classList.toggle('checked')">
+                        <div class="chk-box"></div>
+                        <span>Alam na ang destinasyon at ruta</span>
+                    </div>
+                    <div class="check-item" onclick="this.classList.toggle('checked')">
+                        <div class="chk-box"></div>
+                        <span>Na-screenshot ang direksyon</span>
+                    </div>
+                    <div class="check-item" onclick="this.classList.toggle('checked')">
+                        <div class="chk-box"></div>
+                        <span>May payong (lalo na sa tag-ulan)</span>
+                    </div>
+                    <div class="check-item" onclick="this.classList.toggle('checked')">
+                        <div class="chk-box"></div>
+                        <span>Naalam ang emergency numbers</span>
+                    </div>
+                    <div class="check-item" onclick="this.classList.toggle('checked')">
+                        <div class="chk-box"></div>
+                        <span>Charged ang phone</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Scenarios -->
+        <div class="sec-hd">
+            <div class="sec-chip">🎯 Praktikal na Gabay</div>
+            <h2 class="sec-ttl" style="font-size:1.8rem;">Mga Karaniwang Sitwasyon</h2>
+            <span class="sec-ttl-line"></span>
+            <p class="sec-sub">Heto ang mga maaaring mangyari sa iyo at kung paano harapin ang bawat isa.</p>
+        </div>
+
+        <div class="scenarios-grid">
+            <div class="scenario-card fade-in">
+                <div class="scenario-head">
+                    <div class="scenario-icon">🏠</div>
+                    <h3>Galing ka sa Subdivision papuntang Mall/SM</h3>
+                </div>
+                <div class="scenario-steps">
+                    <div class="sc-step"><div class="sc-num">1</div><p>Sumakay ng tricycle papunta sa pinakamalapit na jeepney terminal.</p></div>
+                    <div class="sc-step"><div class="sc-num">2</div><p>Hanapin ang jeepney na may ruta papuntang Tungko o SJDM Bayan.</p></div>
+                    <div class="sc-step"><div class="sc-num">3</div><p>Mula sa Tungko, may jeepney o multicab papunta sa SM City SJDM.</p></div>
+                </div>
+                <div class="scenario-tag">💰 Est. ₱50–₱80 total</div>
+            </div>
+            <div class="scenario-card fade-in">
+                <div class="scenario-head">
+                    <div class="scenario-icon">🏙️</div>
+                    <h3>Papuntang Caloocan / Metro Manila</h3>
+                </div>
+                <div class="scenario-steps">
+                    <div class="sc-step"><div class="sc-num">1</div><p>Pumunta sa Tungko Terminal gamit ang jeepney mula sa iyong lugar.</p></div>
+                    <div class="sc-step"><div class="sc-num">2</div><p>Sa Tungko, sumakay ng bus o UV Express papuntang Muzon o Monumento.</p></div>
+                    <div class="sc-step"><div class="sc-num">3</div><p>Sa Monumento (Caloocan), sumasakay ng MRT o LRT para sa ibang destinasyon.</p></div>
+                </div>
+                <div class="scenario-tag">⏱️ Est. 1–2 oras depende sa trapik</div>
+            </div>
+            <div class="scenario-card fade-in">
+                <div class="scenario-head">
+                    <div class="scenario-icon">🌿</div>
+                    <h3>Pupunta sa Sapang Palay</h3>
+                </div>
+                <div class="scenario-steps">
+                    <div class="sc-num" style="display:none">1</div>
+                    <div class="sc-step"><div class="sc-num">1</div><p>Pumunta sa Muzon Junction — jeepney o tricycle mula sa inyong lugar.</p></div>
+                    <div class="sc-step"><div class="sc-num">2</div><p>Sa Muzon, hanapin ang jeepney na pabuntong SJDM Bayan o Sapang Palay direct.</p></div>
+                    <div class="sc-step"><div class="sc-num">3</div><p>Travel time: ~20–35 minuto mula Muzon.</p></div>
+                </div>
+                <div class="scenario-tag">💰 Est. ₱20–₱30 mula Muzon</div>
+            </div>
+            <div class="scenario-card fade-in">
+                <div class="scenario-head">
+                    <div class="scenario-icon">🆘</div>
+                    <h3>Nawala ka o Naliligaw</h3>
+                </div>
+                <div class="scenario-steps">
+                    <div class="sc-step"><div class="sc-num">1</div><p>Huwag mag-panic. Magtanong sa pinakamalapit na tao o pulis.</p></div>
+                    <div class="sc-step"><div class="sc-num">2</div><p>Hanapin ang pinakamalapit na terminal — malamang may alam sila.</p></div>
+                    <div class="sc-step"><div class="sc-num">3</div><p>I-call ang lokal na 911 o SJDM Police: <strong>0916-432-0401</strong>.</p></div>
+                </div>
+                <div class="scenario-tag">🚨 Emergency: 911 (National)</div>
+            </div>
+            <div class="scenario-card fade-in">
+                <div class="scenario-head">
+                    <div class="scenario-icon">🌧️</div>
+                    <h3>Biglang Umulan</h3>
+                </div>
+                <div class="scenario-steps">
+                    <div class="sc-step"><div class="sc-num">1</div><p>Maghanap ng matirahan — palengke, mall, o tindahan.</p></div>
+                    <div class="sc-step"><div class="sc-num">2</div><p>Antayin ang paghinto ng ulan bago ulit sumakay — mas ligtas.</p></div>
+                    <div class="sc-step"><div class="sc-num">3</div><p>Iwasan ang mga mababang lugar malapit sa Tungko creek kapag malakas ang ulan.</p></div>
+                </div>
+                <div class="scenario-tag">🌦️ Check: Weather section ng Biyahero</div>
+            </div>
+            <div class="scenario-card fade-in">
+                <div class="scenario-head">
+                    <div class="scenario-icon">🌙</div>
+                    <h3>Gabi na at Wala pang Sasakyan</h3>
+                </div>
+                <div class="scenario-steps">
+                    <div class="sc-step"><div class="sc-num">1</div><p>Ang karamihan ng jeepney ay tumitingin ng pasada hanggang 8–10 PM lang.</p></div>
+                    <div class="sc-step"><div class="sc-num">2</div><p>Pagkatapos ng 9 PM, tricycle na lang o online ride-hailing ang pagpipilian.</p></div>
+                    <div class="sc-step"><div class="sc-num">3</div><p>Huwag sumakay ng hindi kilalang sasakyan — siguraduhing may driver ID.</p></div>
+                </div>
+                <div class="scenario-tag">⏰ Last trip: ~9–10 PM (jeepney)</div>
+            </div>
+        </div>
+
+        <!-- Do's and Dont's -->
+        <div class="dos-donts fade-in">
+            <div class="dd-card dos">
+                <div class="dd-head">
+                    <div class="dd-icon">✅</div>
+                    <h3>Mga Dapat Gawin (Do's)</h3>
+                </div>
+                <div class="dd-list">
+                    <div class="dd-item">Magdala ng sapat na barya para sa pamasahe</div>
+                    <div class="dd-item">Sabihin ang "Para po!" bago ang iyong babaan</div>
+                    <div class="dd-item">Bantayan ang iyong mga gamit sa jeepney at terminal</div>
+                    <div class="dd-item">Mag-alok ng upuan sa matatanda, buntis, at may kapansanan</div>
+                    <div class="dd-item">Humingi ng resibo o i-note ang plaka ng sasakyan</div>
+                    <div class="dd-item">Magtanong kung hindi ka sigurado sa ruta</div>
+                    <div class="dd-item">Sumunod sa traffic rules at bayad ng tamang fare</div>
+                    <div class="dd-item">Mag-ingat habang lumapit sa gilid ng daan</div>
+                </div>
+            </div>
+            <div class="dd-card donts">
+                <div class="dd-head">
+                    <div class="dd-icon">🚫</div>
+                    <h3>Mga Huwag Gawin (Don'ts)</h3>
+                </div>
+                <div class="dd-list">
+                    <div class="dd-item">Huwag magbayad ng mas mataas kaysa sa tamang fare</div>
+                    <div class="dd-item">Huwag mag-iwan ng gamit nang walang bantay sa terminal</div>
+                    <div class="dd-item">Huwag sumakay sa labas ng jeepney — delikado at ilegal</div>
+                    <div class="dd-item">Huwag makipag-usap sa estranyer tungkol sa iyong itinerary</div>
+                    <div class="dd-item">Huwag umaasa sa sukli — magdala ng exact amount</div>
+                    <div class="dd-item">Huwag bumaba sa lugar na hindi kilala nang walang plano</div>
+                    <div class="dd-item">Huwag gamitin ang phone nang hayagan sa siksikang lugar</div>
+                    <div class="dd-item">Huwag maglakad sa mabilis na daan habang nagte-text</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-banner fade-in">
+            <h2>Handa ka na ba, <em>Biyahero</em>?</h2>
+            <p>Ngayon ay alam mo na ang lahat ng basics. Gamitin ang buong Biyahero guide para sa routes, fare calculator, planner, at marami pa!</p>
+            <div class="cta-btns">
+                <a href="login.html" class="btn-primary" style="font-size:15px;">🗺️ Buksan ang Full Guide</a>
+                <a href="login.html" class="btn-ghost" style="font-size:15px;">📋 Tingnan ang Routes</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>Biya<span>hero</span></h3>
+                <p>Libreng commuting guide para sa lahat ng manlalakbay sa San Jose del Monte, Bulacan. Community-made, community-powered.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Guest Pages</h4>
+                <ul class="footer-links">
+                    <li><a href="#about">About Biyahero</a></li>
+                    <li><a href="#baguhan">Para sa mga Baguhan</a></li>
+                    <li><a href="#firsttime">First-Time Visitor</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Full Guide</h4>
+                <ul class="footer-links">
+                    <li><a href="login.html">Routes & Directions</a></li>
+                    <li><a href="login.html">Fare Calculator</a></li>
+                    <li><a href="login.html">Commute Planner</a></li>
+                    <li><a href="login.html">Terminal Guide</a></li>
+                    <li><a href="login.html">Emergency Hotlines</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Biyahero SJDM Commuting Guide · Libre · Para sa lahat</p>
+        </div>
+    </div>
+</footer>
+
+<button class="back-top" id="backToTop" title="Back to top">↑</button>
+
+<script>
+    // Hamburger
+    document.getElementById('hamburgerBtn').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('open');
+    });
+    document.querySelectorAll('.mobile-nav a').forEach(a => a.addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.remove('open');
+    }));
+
+    // Back to top & nav scroll
+    const btt = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        btt.classList.toggle('show', window.scrollY > 400);
+        document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+    });
+    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Nav active
+    const secs = document.querySelectorAll('section[id]');
+    const navAs = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+        let cur = '';
+        secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.getAttribute('id'); });
+        navAs.forEach(a => {
+            a.classList.remove('active');
+            if (a.getAttribute('href') === '#' + cur) a.classList.add('active');
+        });
+    });
+
+    // Fade-in observer
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
