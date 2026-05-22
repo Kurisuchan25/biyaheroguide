@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css">
+    <link rel="stylesheet" href="css/subscription.css">
     <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js" type="module"></script>
     <style>
         :root {
@@ -59,6 +60,13 @@
             .mobile-nav.open{display:flex;}
             .mobile-nav a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;font-weight:600;padding:11px 16px;border-radius:10px;transition:var(--r);}
             .mobile-nav a:hover{background:rgba(255,255,255,0.08);}
+            .subscription-status{display:flex;align-items:center;margin-left:12px;}
+            .status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;}
+            .status-badge.active{background:rgba(82,183,136,0.2);color:#74d9a8;border:1px solid rgba(82,183,136,0.35);}
+            .status-badge.trial{background:rgba(244,196,48,0.2);color:var(--gold);border:1px solid rgba(244,196,48,0.35);}
+            .status-badge.expired{background:rgba(255,107,107,0.2);color:#ff8a8a;border:1px solid rgba(255,107,107,0.35);}
+            .logout-btn{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:var(--r);margin-left:8px;font-family:'DM Sans',sans-serif;}
+            .logout-btn:hover{background:rgba(255,255,255,0.2);transform:translateY(-1px);}
 
             /* ═══ HERO ═══ */
             .hero{min-height:100vh;padding-top:93px;display:flex;align-items:center;position:relative;overflow:hidden;
@@ -484,6 +492,8 @@
                 <li><a href="#checklist">Checklist</a></li>
                 <li><a href="#emergency" class="nav-cta">🚨 Emergency</a></li>
             </ul>
+            <div class="subscription-status" id="subscriptionStatus"></div>
+            <button class="logout-btn" id="logoutBtn" onclick="doLogout()">Logout</button>
             <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
         </div>
         <div class="mobile-nav" id="mobileMenu">
@@ -532,7 +542,7 @@
     <section id="routes" class="sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">🗺️ Navigation</div>
+                
                 <h2 class="sec-ttl fade-in">Popular Routes</h2>
                 <p class="sec-sub fade-in">Step-by-step directions between SJDM barangays and terminals</p>
             </div>
@@ -544,7 +554,7 @@
     <section id="planner" class="planner-sec sec-white">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">🗓️ Smart Planning</div>
+                
                 <h2 class="sec-ttl fade-in">Commute Planner</h2>
                 <p class="sec-sub fade-in">Enter your departure time and destination — get a full step-by-step schedule</p>
             </div>
@@ -712,7 +722,7 @@
     <section id="transport" class="sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">🚍 Modes</div>
+                
                 <h2 class="sec-ttl fade-in">Transportation Options</h2>
                 <p class="sec-sub fade-in">Every way to get around within SJDM</p>
             </div>
@@ -731,7 +741,7 @@
     <section id="tips" class="sec sec-white">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">💡 Pro Tips</div>
+                
                 <h2 class="sec-ttl fade-in">Commuter Tips</h2>
                 <p class="sec-sub fade-in">Smart habits every SJDM commuter should know</p>
             </div>
@@ -752,7 +762,7 @@
     <section id="calculator" class="sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">💰 Budget</div>
+                
                 <h2 class="sec-ttl fade-in">Fare Calculator</h2>
                 <p class="sec-sub fade-in">Estimate your commuting cost before you leave home</p>
             </div>
@@ -914,7 +924,7 @@
     <section id="weather" class="weather-sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">🌤️ Conditions</div>
+                
                 <h2 class="sec-ttl fade-in">Weather & Commute Alerts</h2>
                 <p class="sec-sub fade-in">Real-time conditions and how they affect your commute today</p>
             </div>
@@ -959,7 +969,7 @@
     <section id="clock" class="clock-sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">⏰ Real-Time</div>
+               
                 <h2 class="sec-ttl fade-in">Live Traffic Status</h2>
                 <p class="sec-sub fade-in">Philippine Standard Time and rush hour tracker</p>
             </div>
@@ -988,7 +998,7 @@
     <section id="terminals" class="terminal-sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">🏢 Infrastructure</div>
+                
                 <h2 class="sec-ttl fade-in">Terminal Guide</h2>
                 <p class="sec-sub fade-in">Key terminals and transport hubs in SJDM — tap to explore</p>
             </div>
@@ -1017,7 +1027,7 @@
     <section id="checklist" class="checklist-sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">✅ Before You Go</div>
+                
                 <h2 class="sec-ttl fade-in">Commuter Checklist</h2>
                 <p class="sec-sub fade-in">Make sure you have everything before you head out</p>
             </div>
@@ -1048,7 +1058,7 @@
     <section id="tracker" class="tracker-sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">📍 Navigation</div>
+                
                 <h2 class="sec-ttl fade-in">Route Tracker</h2>
                 <p class="sec-sub fade-in">Step-by-step navigation for your commute journey</p>
             </div>
@@ -1073,7 +1083,7 @@
     <section id="community" class="community-sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">🌟 Community</div>
+                
                 <h2 class="sec-ttl fade-in">Commuter Stories</h2>
                 <p class="sec-sub fade-in">Real tips from real SJDM commuters</p>
             </div>
@@ -1101,7 +1111,7 @@
     <section id="emergency" class="emergency-sec">
         <div class="container">
             <div class="sec-hd">
-                <div class="sec-chip">🚨 Safety</div>
+                
                 <h2 class="sec-ttl fade-in">Emergency Contacts</h2>
                 <p class="sec-sub fade-in">Save these numbers before you leave the house</p>
             </div>
@@ -1483,10 +1493,41 @@
         const from=document.getElementById('calcFrom').value,to=document.getElementById('calcTo').value,mode=document.getElementById('calcMode').value,trip=parseInt(document.getElementById('calcTrip').value);
         if(!from||!to){alert('Please select both origin and destination!');return;}
         if(from===to){document.getElementById('calcResult').innerHTML='<div class="calc-placeholder"><span>😅</span><p>Origin and destination are the same.</p></div>';return;}
-        const data=fareMatrix[from]&&fareMatrix[from][to]&&fareMatrix[from][to][mode];
-        if(!data){document.getElementById('calcResult').innerHTML='<div class="calc-placeholder"><span>🚧</span><p>Route data not available for this combination. Try a different mode or route.</p></div>';return;}
+        let data=fareMatrix[from]&&fareMatrix[from][to]&&fareMatrix[from][to][mode];
+        /* ── Smart fallback: estimate fare for any unlisted combination ── */
+        if(!data){
+            /* Try reverse direction first */
+            const rev=fareMatrix[to]&&fareMatrix[to][from]&&fareMatrix[to][from][mode];
+            if(rev){
+                data={base:rev.base,range:rev.range,time:rev.time,steps:[...rev.steps].reverse()};
+            } else {
+                /* Try any available mode for this pair to get a base fare */
+                const pair=(fareMatrix[from]&&fareMatrix[from][to])||(fareMatrix[to]&&fareMatrix[to][from]);
+                const anyMode=pair&&(pair.jeepney||pair.tricycle||pair.multicab||pair.bus||pair.uv);
+                /* Mode multipliers vs jeepney base */
+                const mult={jeepney:1,tricycle:2.5,multicab:1.4,bus:1.8,uv:1.6};
+                let base,range,time,steps;
+                if(anyMode){
+                    const jeepBase=pair.jeepney?pair.jeepney.base:anyMode.base;
+                    base=Math.round(jeepBase*(mult[mode]||1));
+                    const lo=Math.round(base*0.85),hi=Math.round(base*1.25);
+                    range='₱'+lo+'–'+hi;
+                    /* derive time from any known mode */
+                    time=anyMode.time||'20–35 min';
+                    steps=[anyMode.steps?anyMode.steps[0]:from+' → '+to];
+                } else {
+                    /* Completely unknown pair — use sensible SJDM defaults per mode */
+                    const defaults={jeepney:{base:18,lo:15,hi:25,time:'20–35 min'},tricycle:{base:45,lo:38,hi:58,time:'18–30 min'},multicab:{base:22,lo:18,hi:28,time:'18–30 min'},bus:{base:32,lo:28,hi:40,time:'25–45 min'},uv:{base:28,lo:24,hi:35,time:'22–40 min'}};
+                    const d=defaults[mode]||defaults.jeepney;
+                    base=d.base;range='₱'+d.lo+'–'+d.hi;time=d.time;
+                    steps=[from.replace(/_/g,' ')+' → '+to.replace(/_/g,' ')];
+                }
+                const modeIcon=mode==='tricycle'?'🛺':mode==='multicab'?'🚐':mode==='bus'?'🚌':mode==='uv'?'🚐':'🚎';
+                data={base,range,time,steps,estimated:true};
+            }
+        }
         const total=data.base*pax*trip;
-        const modeName=mode==='bus'?'🚌 Bus (A/C)':mode==='uv'?'🚐 UV Express':'🚎 Jeepney';
+        const modeName=mode==='bus'?'🚌 Bus (A/C)':mode==='uv'?'🚐 UV Express':mode==='tricycle'?'🛺 Tricycle':mode==='multicab'?'🚐 Multicab':'🚎 Jeepney';
         const fromName=document.getElementById('calcFrom').options[document.getElementById('calcFrom').selectedIndex].text;
         const toName=document.getElementById('calcTo').options[document.getElementById('calcTo').selectedIndex].text;
         const cMapsOrigin=encodeURIComponent(fromName+', San Jose del Monte, Bulacan, Philippines');
@@ -1494,7 +1535,8 @@
         const cMapsUrl='https://www.google.com/maps/dir/?api=1&origin='+cMapsOrigin+'&destination='+cMapsDest+'&travelmode=transit';
         const cMapsBtn='<a href="'+cMapsUrl+'" target="_blank" rel="noopener" class="maps-btn" style="margin-top:16px"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 4C15.163 4 8 11.163 8 20c0 13 16 24 16 24s16-11 16-24c0-8.837-7.163-16-16-16z" fill="#EA4335"/><circle cx="24" cy="20" r="6" fill="#fff"/></svg>Open in Google Maps</a>';
         const summaryCards='<div class="plan-summary" style="margin-top:16px"><div class="plan-sum-item"><span>Est. Fare</span><strong>'+data.range+'</strong></div><div class="plan-sum-item"><span>Total Time</span><strong>'+data.time+'</strong></div><div class="plan-sum-item"><span>Passengers</span><strong>'+pax+(trip===2?' (RT)':'')+'</strong></div></div>';
-        document.getElementById('calcResult').innerHTML='<div class="result-output"><div class="result-route-lbl">'+fromName+' <span style="color:var(--muted)">\u2192</span> '+toName+'</div><div class="result-rows"><div class="result-row"><span class="result-row-lbl">Mode</span><span class="result-row-val">'+modeName+'</span></div><div class="result-row"><span class="result-row-lbl">Base Fare (1 person)</span><span class="result-row-val">'+data.range+'</span></div><div class="result-row"><span class="result-row-lbl">Passengers</span><span class="result-row-val">'+pax+'</span></div><div class="result-row"><span class="result-row-lbl">Trip Type</span><span class="result-row-val">'+(trip===2?'Round Trip':'One-way')+'</span></div><div class="result-row"><span class="result-row-lbl">Est. Travel Time</span><span class="result-row-val">'+data.time+'</span></div><div class="result-row"><span class="result-row-lbl">Route</span><span class="result-row-val" style="font-size:12px">'+data.steps.join(' \u2192 ')+'</span></div></div><div class="result-total"><span class="result-total-lbl">Estimated Total ('+pax+' pax'+(trip===2?', round trip':'')+')</span><span class="result-total-val">~\u20b1'+(data.base*pax*trip).toLocaleString()+'</span></div>'+summaryCards+cMapsBtn+'</div>';
+        const estimatedNote=data.estimated?'<div style="font-size:12px;color:var(--sky);background:rgba(41,169,225,0.08);border:1px solid rgba(41,169,225,0.2);border-radius:8px;padding:7px 12px;margin-bottom:12px;">📊 Estimated based on nearby route data — actual fare may vary slightly.</div>':'';
+        document.getElementById('calcResult').innerHTML='<div class="result-output"><div class="result-route-lbl">'+fromName+' <span style="color:var(--muted)">\u2192</span> '+toName+'</div>'+estimatedNote+'<div class="result-rows"><div class="result-row"><span class="result-row-lbl">Mode</span><span class="result-row-val">'+modeName+'</span></div><div class="result-row"><span class="result-row-lbl">Base Fare (1 person)</span><span class="result-row-val">'+data.range+'</span></div><div class="result-row"><span class="result-row-lbl">Passengers</span><span class="result-row-val">'+pax+'</span></div><div class="result-row"><span class="result-row-lbl">Trip Type</span><span class="result-row-val">'+(trip===2?'Round Trip':'One-way')+'</span></div><div class="result-row"><span class="result-row-lbl">Est. Travel Time</span><span class="result-row-val">'+data.time+'</span></div><div class="result-row"><span class="result-row-lbl">Route</span><span class="result-row-val" style="font-size:12px">'+data.steps.join(' \u2192 ')+'</span></div></div><div class="result-total"><span class="result-total-lbl">Estimated Total ('+pax+' pax'+(trip===2?', round trip':'')+')</span><span class="result-total-val">~\u20b1'+(data.base*pax*trip).toLocaleString()+'</span></div>'+summaryCards+cMapsBtn+'</div>';
     });
 
     /* ─── TERMINAL GUIDE ─── */
@@ -1628,6 +1670,31 @@
     renderRoutes();
     initAnimations();
     lucide.createIcons();
+
+    /* ─── SUBSCRIPTION CHECK ─── */
+    const currentUser = localStorage.getItem('biyahero_current_user');
+    if(!currentUser){
+        document.getElementById('logoutBtn').style.display = 'none';
+    }
+    if(currentUser && typeof SubscriptionManager !== 'undefined'){
+        SubscriptionManager.updateStatusIndicator(currentUser);
+        // Show logout button if user is logged in
+        document.getElementById('logoutBtn').style.display = 'block';
+        // Check access and show payment modal if needed
+        if(!SubscriptionManager.hasAccess(currentUser)){
+            setTimeout(()=>{
+                SubscriptionManager.showPaymentModal();
+            }, 1000);
+        }
+    }
+
+    /* ─── LOGOUT FUNCTION ─── */
+    function doLogout(){
+        localStorage.removeItem('biyahero_current_user');
+        localStorage.removeItem('biyahero_session');
+        location.href = 'login/login.html';
+    }
     </script>
+    <script src="js/subscription.js"></script>
     </body>
     </html>
