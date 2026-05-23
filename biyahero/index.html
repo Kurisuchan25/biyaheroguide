@@ -42,34 +42,210 @@
             .ticker-sep{color:var(--gold);margin:0 20px;opacity:0.7;}
             @keyframes scroll-ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-            /* ═══ NAVBAR ═══ */
-            .nav{background:var(--green);position:fixed;top:33px;width:100%;z-index:1000;transition:var(--r);border-bottom:1px solid rgba(255,255,255,0.07);}
-            .nav.scrolled{background:rgba(27,67,50,0.97);backdrop-filter:blur(12px);}
-            .nav .container{display:flex;align-items:center;justify-content:space-between;height:60px;}
-            .logo{font-family:'Fraunces',serif;font-size:22px;color:#fff;text-decoration:none;display:flex;align-items:center;gap:3px;font-weight:900;}
+            /* ═══ NAVBAR — Mega Menu (Enhanced) ═══ */
+            .nav{
+                background:rgba(18,58,38,0.85);
+                backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+                position:fixed;top:33px;width:100%;z-index:1000;
+                transition:background 0.4s ease,box-shadow 0.4s ease;
+                border-bottom:1px solid rgba(255,255,255,0.08);
+            }
+            .nav.scrolled{
+                background:rgba(13,45,28,0.96);
+                box-shadow:0 8px 40px rgba(0,0,0,0.28);
+            }
+            .nav>.container{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px;}
+
+            /* Logo */
+            .logo{font-family:'Fraunces',serif;font-size:23px;color:#fff;text-decoration:none;display:flex;align-items:center;gap:3px;font-weight:900;flex-shrink:0;transition:opacity 0.2s;}
+            .logo:hover{opacity:0.85;}
             .logo-accent{color:var(--gold);}
-            .nav-links{display:flex;gap:2px;list-style:none;align-items:center;}
-            .nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:13px;font-weight:600;padding:7px 11px;border-radius:8px;transition:var(--r);}
-            .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.1);}
-            .nav-links a.active{color:var(--gold);}
-            .nav-cta{background:var(--gold);color:var(--green)!important;border-radius:8px!important;font-weight:700!important;}
-            .nav-cta:hover{background:#ffd040!important;transform:translateY(-1px);}
-            .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:rgba(255,255,255,0.1);border:none;padding:9px;border-radius:8px;}
-            .hamburger span{width:20px;height:2px;background:#fff;border-radius:2px;display:block;transition:var(--r);}
-            .mobile-nav{display:none;background:#0d3323;padding:16px;flex-direction:column;gap:3px;}
-            .mobile-nav.open{display:flex;}
-            .mobile-nav a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:14px;font-weight:600;padding:11px 16px;border-radius:10px;transition:var(--r);}
-            .mobile-nav a:hover{background:rgba(255,255,255,0.08);}
-            .subscription-status{display:flex;align-items:center;margin-left:12px;}
-            .status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;}
-            .status-badge.active{background:rgba(82,183,136,0.2);color:#74d9a8;border:1px solid rgba(82,183,136,0.35);}
-            .status-badge.trial{background:rgba(244,196,48,0.2);color:var(--gold);border:1px solid rgba(244,196,48,0.35);}
-            .status-badge.expired{background:rgba(255,107,107,0.2);color:#ff8a8a;border:1px solid rgba(255,107,107,0.35);}
-            .logout-btn{background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:var(--r);margin-left:8px;font-family:'DM Sans',sans-serif;}
-            .logout-btn:hover{background:rgba(255,255,255,0.2);transform:translateY(-1px);}
+            .logo-tagline{font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:500;color:rgba(255,255,255,0.38);margin-left:10px;letter-spacing:0.04em;white-space:nowrap;}
+
+            /* Top-level nav list */
+            .nav-links{display:flex;gap:2px;list-style:none;align-items:center;height:64px;margin:0;padding:0;}
+            .nav-links>li{position:relative;display:flex;align-items:center;}
+            .nav-links>li>a,.nav-trigger{
+                color:rgba(255,255,255,0.72);
+                text-decoration:none;font-size:13px;font-weight:600;
+                padding:8px 14px;border-radius:12px;
+                display:flex;align-items:center;gap:6px;
+                cursor:pointer;border:none;background:transparent;
+                font-family:'DM Sans',sans-serif;white-space:nowrap;
+                transition:color 0.22s,background 0.22s,transform 0.18s;
+            }
+            .nav-links>li>a:hover,.nav-trigger:hover{color:#fff;background:rgba(255,255,255,0.1);transform:translateY(-1px);}
+            .nav-links>li.open>a,.nav-links>li.open>.nav-trigger{color:#fff;background:rgba(255,255,255,0.12);}
+            .nav-links>li>a.active{color:var(--gold);}
+
+            /* Animated chevron */
+            .nav-chevron{
+                display:inline-block;font-size:10px;opacity:0.55;
+                transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.2s;
+            }
+            .nav-links>li.open .nav-chevron{transform:rotate(180deg);opacity:1;}
+
+            /* Pill-style special links */
+            .nav-kumita-link{
+                background:rgba(244,196,48,0.13)!important;
+                color:var(--gold)!important;
+                border:1px solid rgba(244,196,48,0.22)!important;
+                border-radius:100px!important;
+                padding:8px 16px!important;
+            }
+            .nav-kumita-link:hover{background:rgba(244,196,48,0.24)!important;color:#fff!important;border-color:rgba(244,196,48,0.4)!important;}
+            .nav-cta-link{
+                background:rgba(255,107,107,0.15)!important;
+                color:#ffbdbd!important;
+                border:1px solid rgba(255,107,107,0.22)!important;
+                border-radius:100px!important;
+                padding:8px 16px!important;
+            }
+            .nav-cta-link:hover{background:rgba(255,107,107,0.28)!important;color:#fff!important;}
+
+            /* ── Mega dropdown panel — smooth open/close ── */
+            .mega-drop,.simple-drop{
+                visibility:hidden;
+                opacity:0;
+                pointer-events:none;
+                transform:translateX(-50%) translateY(-10px) scale(0.97);
+                transition:
+                    opacity 0.28s cubic-bezier(0.16,1,0.3,1),
+                    transform 0.28s cubic-bezier(0.16,1,0.3,1),
+                    visibility 0s linear 0.28s;
+            }
+            .mega-drop{
+                position:absolute;top:calc(100% + 10px);left:50%;
+                background:rgba(12,40,26,0.96);
+                backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+                border:1px solid rgba(255,255,255,0.1);
+                border-radius:22px;
+                box-shadow:0 32px 80px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.04) inset;
+                min-width:580px;padding:0;overflow:hidden;z-index:999;
+            }
+            .simple-drop{
+                position:absolute;top:calc(100% + 10px);left:0;
+                background:rgba(12,40,26,0.96);
+                backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+                border:1px solid rgba(255,255,255,0.1);
+                border-radius:18px;
+                box-shadow:0 24px 60px rgba(0,0,0,0.35),0 0 0 1px rgba(255,255,255,0.04) inset;
+                min-width:230px;padding:10px;z-index:999;
+                transform:translateY(-10px) scale(0.97);
+            }
+            .nav-links>li.open .mega-drop,
+            .nav-links>li.open .simple-drop{
+                visibility:visible;opacity:1;pointer-events:auto;
+                transform:translateX(-50%) translateY(0) scale(1);
+                transition:
+                    opacity 0.28s cubic-bezier(0.16,1,0.3,1),
+                    transform 0.28s cubic-bezier(0.16,1,0.3,1),
+                    visibility 0s linear 0s;
+            }
+            .nav-links>li.open .simple-drop{
+                transform:translateY(0) scale(1);
+            }
+
+            /* Connector bridge so mouse can travel to dropdown */
+            .mega-drop::before,.simple-drop::before{
+                content:'';position:absolute;top:-12px;left:0;right:0;height:12px;
+            }
+
+            /* Mega header strip */
+            .mega-header{
+                background:rgba(255,255,255,0.03);
+                border-bottom:1px solid rgba(255,255,255,0.07);
+                padding:16px 22px 13px;
+                display:flex;align-items:center;justify-content:space-between;
+            }
+            .mega-header-title{font-family:'Fraunces',serif;font-size:13px;color:rgba(255,255,255,0.45);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+            .mega-header-sub{font-size:11.5px;color:rgba(255,255,255,0.3);}
+
+            /* Mega items grid — staggered entrance */
+            .mega-grid{display:grid;padding:16px;gap:4px;}
+            .mega-grid.cols-2{grid-template-columns:1fr 1fr;}
+            .mega-grid.cols-3{grid-template-columns:1fr 1fr 1fr;}
+            .mega-item{
+                display:flex;align-items:flex-start;gap:13px;padding:13px 14px;
+                border-radius:14px;text-decoration:none;
+                transition:background 0.2s,transform 0.2s;
+            }
+            .mega-item:hover{background:rgba(255,255,255,0.07);transform:translateY(-1px);}
+            .mega-item:active{transform:scale(0.98);}
+            .mega-icon{
+                width:38px;height:38px;border-radius:12px;
+                display:flex;align-items:center;justify-content:center;
+                font-size:1.15rem;flex-shrink:0;margin-top:1px;
+                transition:transform 0.2s;
+            }
+            .mega-item:hover .mega-icon{transform:scale(1.08);}
+            .mega-icon.g{background:rgba(82,183,136,0.16);}
+            .mega-icon.y{background:rgba(244,196,48,0.14);}
+            .mega-icon.b{background:rgba(41,169,225,0.14);}
+            .mega-icon.r{background:rgba(255,107,107,0.14);}
+            .mega-icon.p{background:rgba(180,130,255,0.14);}
+            .mega-item-text strong{display:block;font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;transition:color 0.2s;}
+            .mega-item:hover .mega-item-text strong{color:var(--gold);}
+            .mega-item-text span{font-size:11.5px;color:rgba(255,255,255,0.42);line-height:1.45;}
+            .mega-footer{
+                border-top:1px solid rgba(255,255,255,0.07);
+                padding:12px 22px;
+                display:flex;align-items:center;justify-content:space-between;
+                background:rgba(255,255,255,0.02);
+            }
+            .mega-footer-note{font-size:11.5px;color:rgba(255,255,255,0.3);}
+            .mega-footer-link{font-size:12px;font-weight:700;color:var(--gold);text-decoration:none;transition:color 0.2s,gap 0.2s;display:flex;align-items:center;gap:4px;}
+            .mega-footer-link:hover{color:#fff;}
+
+            /* Simple dropdown items */
+            .simple-drop a{
+                display:flex;align-items:center;gap:10px;
+                color:rgba(255,255,255,0.75);text-decoration:none;
+                font-size:13px;font-weight:600;padding:10px 14px;border-radius:11px;
+                transition:background 0.18s,color 0.18s,transform 0.18s;
+            }
+            .simple-drop a:hover{background:rgba(255,255,255,0.08);color:#fff;transform:translateX(3px);}
+            .simple-drop-div{height:1px;background:rgba(255,255,255,0.07);margin:6px 0;}
+
+            /* Nav right actions */
+            .nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+            .subscription-status{display:flex;align-items:center;}
+            .status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;font-size:11.5px;font-weight:700;font-family:'DM Sans',sans-serif;}
+            .status-badge.active{background:rgba(82,183,136,0.18);color:#74d9a8;border:1px solid rgba(82,183,136,0.3);}
+            .status-badge.trial{background:rgba(244,196,48,0.18);color:var(--gold);border:1px solid rgba(244,196,48,0.3);}
+            .status-badge.expired{background:rgba(255,107,107,0.18);color:#ff8a8a;border:1px solid rgba(255,107,107,0.3);}
+
+            /* Hamburger — animates to X when open */
+            .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.1);padding:9px;border-radius:12px;flex-shrink:0;transition:background 0.2s;}
+            .hamburger:hover{background:rgba(255,255,255,0.15);}
+            .hamburger span{width:18px;height:2px;background:#fff;border-radius:2px;display:block;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.2s;}
+            .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+            .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+            .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+            /* Mobile drawer — slides down */
+            .mobile-nav{
+                display:none;flex-direction:column;gap:2px;
+                background:rgba(10,34,22,0.98);
+                border-top:1px solid rgba(255,255,255,0.07);
+                max-height:0;overflow:hidden;
+                transition:max-height 0.4s cubic-bezier(0.16,1,0.3,1);
+            }
+            .mobile-nav.open{display:flex;max-height:80vh;}
+            .mobile-nav-section{font-size:10px;font-weight:700;color:rgba(255,255,255,0.26);text-transform:uppercase;letter-spacing:0.12em;padding:14px 18px 4px;}
+            .mobile-nav a{
+                color:rgba(255,255,255,0.75);text-decoration:none;font-size:13.5px;font-weight:600;
+                padding:11px 18px;display:flex;align-items:center;gap:12px;
+                border-radius:0;transition:background 0.18s,color 0.18s,padding 0.18s;
+            }
+            .mobile-nav a:hover{background:rgba(255,255,255,0.06);color:#fff;padding-left:24px;}
+            .mobile-nav a .m-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+            .mobile-nav a.m-kumita{color:var(--gold);}
+            .mobile-nav a.m-cta{color:#ffbdbd;}
+            .mobile-nav-divider{height:1px;background:rgba(255,255,255,0.05);margin:4px 18px;}
 
             /* ═══ HERO ═══ */
-            .hero{min-height:100vh;padding-top:93px;display:flex;align-items:center;position:relative;overflow:hidden;
+            .hero{min-height:100vh;padding-top:100px;display:flex;align-items:center;position:relative;overflow:hidden;
                 background:linear-gradient(150deg,rgba(13,51,35,0.92) 0%,rgba(27,67,50,0.88) 40%,rgba(45,106,79,0.85) 100%),
                         url('commuter.jpg') center/cover no-repeat fixed;}
             .hero-mesh{position:absolute;inset:0;background-image:radial-gradient(ellipse at 20% 50%,rgba(82,183,136,0.18) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(41,169,225,0.1) 0%,transparent 50%),radial-gradient(ellipse at 60% 80%,rgba(244,196,48,0.08) 0%,transparent 50%);pointer-events:none;}
@@ -415,6 +591,94 @@
             .footer-bottom{border-top:1px solid rgba(255,255,255,0.07);padding:20px 0;text-align:center;}
             .footer-bottom p{font-size:12px;color:rgba(255,255,255,0.35);}
 
+            /* ═══ KUMITA SECTION ═══ */
+            .kumita-sec{padding:96px 0;background:linear-gradient(150deg,#0d3323 0%,#1B4332 60%,#2D6A4F 100%);position:relative;overflow:hidden;}
+            .kumita-sec::before{content:'';position:absolute;inset:0;background-image:radial-gradient(ellipse at 10% 50%,rgba(244,196,48,0.1) 0%,transparent 50%),radial-gradient(ellipse at 90% 20%,rgba(82,183,136,0.12) 0%,transparent 50%);pointer-events:none;}
+            .kumita-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:24px;margin-bottom:48px;}
+            .kumita-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:22px;padding:30px;transition:var(--r);position:relative;overflow:hidden;}
+            .kumita-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;}
+            .kumita-card.gold::before{background:linear-gradient(90deg,var(--gold),#ffb700);}
+            .kumita-card.sky::before{background:linear-gradient(90deg,var(--sky),#1e8fbf);}
+            .kumita-card.green::before{background:linear-gradient(90deg,var(--green-lt),#3a9e6d);}
+            .kumita-card:hover{background:rgba(255,255,255,0.1);transform:translateY(-5px);}
+            .kumita-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:18px;}
+            .kumita-icon.gold{background:rgba(244,196,48,0.2);}
+            .kumita-icon.sky{background:rgba(41,169,225,0.2);}
+            .kumita-icon.green{background:rgba(82,183,136,0.2);}
+            .kumita-card h3{color:#fff;font-size:1.15rem;margin-bottom:8px;}
+            .kumita-card p{color:rgba(255,255,255,0.65);font-size:13.5px;line-height:1.65;margin-bottom:18px;}
+            .kumita-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(244,196,48,0.15);border:1px solid rgba(244,196,48,0.3);color:var(--gold);padding:5px 12px;border-radius:100px;font-size:11.5px;font-weight:700;margin-bottom:18px;}
+            .kumita-btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--green);border:none;padding:11px 22px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:var(--r);}
+            .kumita-btn:hover{background:#ffd040;transform:translateY(-2px);}
+            .kumita-btn.outline{background:transparent;border:1.5px solid rgba(255,255,255,0.25);color:#fff;}
+            .kumita-btn.outline:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px);}
+            /* Referral box */
+            .referral-box{background:rgba(244,196,48,0.08);border:1.5px solid rgba(244,196,48,0.25);border-radius:18px;padding:30px;display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+            .referral-code-wrap{flex:1;min-width:220px;}
+            .referral-code-wrap p{color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:10px;}
+            .referral-code{background:rgba(0,0,0,0.25);border:1.5px dashed rgba(244,196,48,0.4);border-radius:12px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+            .referral-code span{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--gold);letter-spacing:0.12em;}
+            .copy-btn{background:var(--gold);color:var(--green);border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--r);}
+            .copy-btn:hover{background:#ffd040;}
+            .referral-stats{display:flex;gap:20px;flex-wrap:wrap;}
+            .ref-stat{text-align:center;background:rgba(255,255,255,0.06);border-radius:12px;padding:14px 22px;}
+            .ref-stat strong{display:block;font-family:'Fraunces',serif;font-size:1.6rem;color:var(--gold);}
+            .ref-stat span{font-size:12px;color:rgba(255,255,255,0.55);}
+            /* Gig board */
+            .gig-board{display:flex;flex-direction:column;gap:12px;}
+            .gig-post-form{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+            .gig-input{flex:1;min-width:180px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:12px 16px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13.5px;outline:none;transition:border-color 0.2s;}
+            .gig-input::placeholder{color:rgba(255,255,255,0.35);}
+            .gig-input:focus{border-color:var(--gold);}
+            .gig-select{background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:12px 16px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13.5px;outline:none;min-width:130px;}
+            .gig-select option{background:#1B4332;color:#fff;}
+            .gig-submit{background:var(--gold);color:var(--green);border:none;padding:12px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:var(--r);white-space:nowrap;}
+            .gig-submit:hover{background:#ffd040;}
+            .gig-item{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;transition:var(--r);}
+            .gig-item:hover{background:rgba(255,255,255,0.09);}
+            .gig-item-left{}
+            .gig-title{font-weight:700;color:#fff;font-size:14px;}
+            .gig-meta{font-size:12px;color:rgba(255,255,255,0.5);margin-top:3px;}
+            .gig-type-tag{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;margin-right:6px;}
+            .gig-type-tag.delivery{background:rgba(41,169,225,0.2);color:#7dd4f0;}
+            .gig-type-tag.errand{background:rgba(82,183,136,0.2);color:#74d9a8;}
+            .gig-type-tag.transport{background:rgba(244,196,48,0.2);color:var(--gold);}
+            .gig-type-tag.other{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);}
+            .gig-pay{font-family:'Fraunces',serif;font-size:1.1rem;color:var(--gold);font-weight:700;white-space:nowrap;}
+            .gig-contact-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--r);}
+            .gig-contact-btn:hover{background:var(--green-lt);color:#fff;}
+            /* Driver signup */
+            .driver-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+            .driver-field{display:flex;flex-direction:column;gap:5px;}
+            .driver-field.full{grid-column:1/-1;}
+            .driver-field label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.07em;}
+            .driver-field input,.driver-field select{background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:12px 14px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13.5px;outline:none;transition:border-color 0.2s;}
+            .driver-field input::placeholder{color:rgba(255,255,255,0.3);}
+            .driver-field input:focus,.driver-field select:focus{border-color:var(--sky);}
+            .driver-field select option{background:#1B4332;}
+            .driver-perks{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+            .perk-row{display:flex;align-items:flex-start;gap:12px;}
+            .perk-check{width:20px;height:20px;background:rgba(82,183,136,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#74d9a8;font-size:12px;flex-shrink:0;margin-top:2px;}
+            .perk-text strong{display:block;color:#fff;font-size:13.5px;}
+            .perk-text span{color:rgba(255,255,255,0.5);font-size:12px;}
+            /* Modal */
+            .kumita-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:2000;align-items:center;justify-content:center;padding:20px;}
+            .kumita-modal.open{display:flex;}
+            .kumita-modal-box{background:#0d3323;border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:32px;max-width:440px;width:100%;position:relative;animation:fadeUp 0.3s ease;}
+            .kumita-modal-box h3{color:#fff;margin-bottom:8px;}
+            .kumita-modal-box p{color:rgba(255,255,255,0.6);font-size:13.5px;margin-bottom:20px;}
+            .kumita-modal-close{position:absolute;top:16px;right:18px;background:rgba(255,255,255,0.1);border:none;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+            .success-anim{text-align:center;padding:20px 0;}
+            .success-anim .big-emoji{font-size:3rem;display:block;margin-bottom:12px;}
+            .success-anim h4{color:#fff;font-size:1.2rem;margin-bottom:8px;}
+            .success-anim p{color:rgba(255,255,255,0.6);font-size:13px;}
+            @media(max-width:768px){
+                .referral-box{flex-direction:column;}
+                .driver-form{grid-template-columns:1fr;}
+                .driver-field.full{grid-column:1;}
+                .kumita-grid{grid-template-columns:1fr;}
+            }
+
             /* ═══ BACK TO TOP ═══ */
             .back-top{position:fixed;bottom:100px;right:32px;width:42px;height:42px;background:var(--green);color:#fff;border:none;border-radius:12px;cursor:pointer;font-size:18px;box-shadow:var(--shadow);display:none;align-items:center;justify-content:center;z-index:800;transition:var(--r);}
             .back-top.show{display:flex;}
@@ -438,15 +702,19 @@
                 .weather-grid{grid-template-columns:1fr;}
                 .footer-grid{grid-template-columns:1fr 1fr;gap:36px;}
             }
-            @media(max-width:680px){
+            @media(max-width:900px){
                 .nav-links{display:none;}
                 .hamburger{display:flex;}
+                .logo-tagline{display:none;}
+            }
+            @media(max-width:680px){
                 .faq-panel{width:calc(100vw - 40px);right:20px;}
                 .clock-grid{grid-template-columns:1fr;}
                 .footer-grid{grid-template-columns:1fr;}
                 .tracker-top select{min-width:100%;width:100%;}
                 .plan-timeline{gap:8px;}
                 .hero-right dotlottie-wc{max-width:280px;max-height:280px;width:100%;height:auto;}
+                .hero{padding-top:100px;}
             }
         </style>
     </head>
@@ -477,36 +745,119 @@
         </span>
     </div>
 
-    <!-- Navbar -->
+    <!-- Navbar — Mega Menu -->
     <nav class="nav" id="mainNav">
         <div class="container">
-            <a href="#hero" class="logo">Biya<span class="logo-accent">hero</span></a>
-            <ul class="nav-links">
+            <a href="#hero" class="logo">Biya<span class="logo-accent">hero</span><span class="logo-tagline">SJDM Guide</span></a>
+
+            <ul class="nav-links" id="mainNavLinks">
+
+                <!-- Home (plain link) -->
                 <li><a href="#hero">Home</a></li>
-                <li><a href="#routes">Routes</a></li>
-                <li><a href="#planner">Planner</a></li>
-                <li><a href="#calculator">Fare</a></li>
-                <li><a href="#weather">Weather</a></li>
-                <li><a href="#clock">Rush Hour</a></li>
-                <li><a href="#terminals">Terminals</a></li>
-                <li><a href="#checklist">Checklist</a></li>
-                <li><a href="#emergency" class="nav-cta">🚨 Emergency</a></li>
+
+                <!-- Commute (mega) -->
+                <li>
+                    <button class="nav-trigger" data-menu="commute">Commute <span class="nav-chevron">▾</span></button>
+                    <div class="mega-drop" id="menu-commute">
+                        <div class="mega-header">
+                            <span class="mega-header-title">Commute Tools</span>
+                            <span class="mega-header-sub">Plan, calculate, explore routes</span>
+                        </div>
+                        <div class="mega-grid cols-2">
+                            <a href="#routes" class="mega-item">
+                                <div class="mega-icon g">🗺️</div>
+                                <div class="mega-item-text"><strong>Popular Routes</strong><span>Step-by-step directions sa lahat ng major SJDM routes</span></div>
+                            </a>
+                            <a href="#planner" class="mega-item">
+                                <div class="mega-icon b">🗓️</div>
+                                <div class="mega-item-text"><strong>Commute Planner</strong><span>I-input ang oras at destination — makakuha ng full schedule</span></div>
+                            </a>
+                            <a href="#calculator" class="mega-item">
+                                <div class="mega-icon y">💰</div>
+                                <div class="mega-item-text"><strong>Fare Calculator</strong><span>Exact fare estimate para sa jeepney, tricycle, at multicab</span></div>
+                            </a>
+                            <a href="#tracker" class="mega-item">
+                                <div class="mega-icon p">📍</div>
+                                <div class="mega-item-text"><strong>Route Tracker</strong><span>Step-by-step navigation para sa iyong commute</span></div>
+                            </a>
+                        </div>
+                        <div class="mega-footer">
+                            <span class="mega-footer-note">🚎 Jeepney · 🛺 Tricycle · 🚐 Multicab</span>
+                            <a href="#routes" class="mega-footer-link">Lahat ng Routes →</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Info (mega) -->
+                <li>
+                    <button class="nav-trigger" data-menu="info">Info & Alerts <span class="nav-chevron">▾</span></button>
+                    <div class="mega-drop" id="menu-info">
+                        <div class="mega-header">
+                            <span class="mega-header-title">Live Info</span>
+                            <span class="mega-header-sub">Weather, rush hours, at terminals</span>
+                        </div>
+                        <div class="mega-grid cols-3">
+                            <a href="#weather" class="mega-item">
+                                <div class="mega-icon b">🌤</div>
+                                <div class="mega-item-text"><strong>Weather</strong><span>Real-time alerts at commute impact</span></div>
+                            </a>
+                            <a href="#clock" class="mega-item">
+                                <div class="mega-icon r">⏰</div>
+                                <div class="mega-item-text"><strong>Rush Hour</strong><span>AM/PM peak hours at live traffic status</span></div>
+                            </a>
+                            <a href="#terminals" class="mega-item">
+                                <div class="mega-icon g">🏢</div>
+                                <div class="mega-item-text"><strong>Terminals</strong><span>Operating hours at connections ng bawat terminal</span></div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Prep (simple dropdown) -->
+                <li>
+                    <button class="nav-trigger" data-menu="prep">Preparation <span class="nav-chevron">▾</span></button>
+                    <div class="simple-drop" id="menu-prep">
+                        <a href="#checklist">✅&nbsp; Commuter Checklist</a>
+                        <a href="#tips">💡&nbsp; Safety Tips</a>
+                        <div class="simple-drop-div"></div>
+                        <a href="#emergency">🚨&nbsp; Emergency Contacts</a>
+                    </div>
+                </li>
+
+                <!-- Kumita (special) -->
+                <li><a href="#kumita" class="nav-kumita-link">💸 Kumita</a></li>
+
+                <!-- Emergency CTA -->
+                <li><a href="#emergency" class="nav-cta-link">🚨 Emergency</a></li>
             </ul>
-            <div class="subscription-status" id="subscriptionStatus"></div>
-            <button class="logout-btn" id="logoutBtn" onclick="doLogout()">Logout</button>
-            <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+
+            <div class="nav-actions">
+                <div class="subscription-status" id="subscriptionStatus"></div>
+                
+                
+                <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+            </div>
         </div>
+
+        <!-- Mobile Drawer -->
         <div class="mobile-nav" id="mobileMenu">
-            <a href="#hero">Home</a>
-            <a href="#routes">Routes</a>
-            <a href="#planner">Commute Planner</a>
-            <a href="#calculator">Fare Calculator</a>
-            <a href="#weather">Weather & Alerts</a>
-            <a href="#clock">Rush Hour</a>
-            <a href="#terminals">Terminal Guide</a>
-            <a href="#checklist">Checklist</a>
-            <a href="#tracker">Route Tracker</a>
-            <a href="#emergency">Emergency</a>
+            <div class="mobile-nav-section">Commute</div>
+            <a href="#routes"><span class="m-icon" style="background:rgba(82,183,136,0.15)">🗺️</span>Popular Routes</a>
+            <a href="#planner"><span class="m-icon" style="background:rgba(41,169,225,0.15)">🗓️</span>Commute Planner</a>
+            <a href="#calculator"><span class="m-icon" style="background:rgba(244,196,48,0.15)">💰</span>Fare Calculator</a>
+            <a href="#tracker"><span class="m-icon" style="background:rgba(180,130,255,0.15)">📍</span>Route Tracker</a>
+            <div class="mobile-nav-divider"></div>
+            <div class="mobile-nav-section">Info & Alerts</div>
+            <a href="#weather"><span class="m-icon" style="background:rgba(41,169,225,0.15)">🌤</span>Weather & Alerts</a>
+            <a href="#clock"><span class="m-icon" style="background:rgba(255,107,107,0.15)">⏰</span>Rush Hour</a>
+            <a href="#terminals"><span class="m-icon" style="background:rgba(82,183,136,0.15)">🏢</span>Terminal Guide</a>
+            <div class="mobile-nav-divider"></div>
+            <div class="mobile-nav-section">Preparation</div>
+            <a href="#checklist"><span class="m-icon" style="background:rgba(82,183,136,0.15)">✅</span>Commuter Checklist</a>
+            <a href="#tips"><span class="m-icon" style="background:rgba(244,196,48,0.15)">💡</span>Safety Tips</a>
+            <div class="mobile-nav-divider"></div>
+            <a href="#kumita" class="m-kumita"><span class="m-icon" style="background:rgba(244,196,48,0.15)">💸</span>Kumita — Mag-earn</a>
+            <a href="#emergency" class="m-cta"><span class="m-icon" style="background:rgba(255,107,107,0.15)">🚨</span>Emergency Contacts</a>
         </div>
     </nav>
 
@@ -1125,7 +1476,175 @@
         </div>
     </section>
 
+    <!-- Kumita (Earn Income) -->
+    <section id="kumita" class="kumita-sec">
+        <div class="container">
+            <div class="sec-hd">
+                <span class="sec-chip">💸 KUMITA</span>
+                <h2 class="sec-ttl fade-in" style="color:#fff;">Kumita Gamit ang Biyahero</h2>
+                <p class="sec-sub fade-in">Mag-earn habang nag-cocommute — maging driver partner, mag-post ng gig, o mag-refer ng kaibigan para sa rewards.</p>
+            </div>
+
+            <!-- 3 Main Earn Cards -->
+            <div class="kumita-grid">
+
+                <!-- Driver Partner -->
+                <div class="kumita-card gold fade-in">
+                    <div class="kumita-icon gold">🚗</div>
+                    <div class="kumita-badge">⭐ Pinaka-Popular</div>
+                    <h3>Maging Driver Partner</h3>
+                    <p>I-offer ang iyong sasakyan bilang serbisyo sa loob ng SJDM. Jeepney, tricycle, o private car — kumita ka bawat biyahe. Ikaw ang boss ng iyong schedule.</p>
+                    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+                        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.7);"><span style="color:#74d9a8;">✓</span> Flexible hours — ikaw ang magde-decide</div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.7);"><span style="color:#74d9a8;">✓</span> Est. ₱500–₱1,500/araw (part-time)</div>
+                        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.7);"><span style="color:#74d9a8;">✓</span> Direktang bayad — walang middleman</div>
+                    </div>
+                    <button class="kumita-btn" onclick="document.getElementById('driverModal').classList.add('open')">🚗 Mag-apply Ngayon</button>
+                </div>
+
+                <!-- Local Gig Board -->
+                <div class="kumita-card sky fade-in">
+                    <div class="kumita-icon sky">📋</div>
+                    <h3>Local Gig Board</h3>
+                    <p>Mag-post ng trabaho o humanap ng quick jobs sa loob ng SJDM — delivery, errand, hatid-sunduin, at iba pa. Para sa mga may extra time at gusto kumita.</p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
+                        <span class="gig-type-tag delivery">📦 Delivery</span>
+                        <span class="gig-type-tag errand">🛒 Errands</span>
+                        <span class="gig-type-tag transport">🚗 Transport</span>
+                        <span class="gig-type-tag other">🔧 Other</span>
+                    </div>
+                    <button class="kumita-btn outline" onclick="document.getElementById('gigSection').scrollIntoView({behavior:'smooth'})">📋 Tingnan ang Gig Board</button>
+                </div>
+
+                <!-- Referral Rewards -->
+                <div class="kumita-card green fade-in">
+                    <div class="kumita-icon green">🎁</div>
+                    <h3>Referral Rewards</h3>
+                    <p>Mag-invite ng kaibigan o kapitbahay sa Biyahero. Para sa bawat bagong premium subscriber na mag-sign up gamit ang iyong code, makakatanggap ka ng ₱50 credits.</p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
+                        <span style="background:rgba(82,183,136,0.15);color:#74d9a8;border:1px solid rgba(82,183,136,0.3);padding:5px 12px;border-radius:100px;font-size:12px;font-weight:700;">₱50 per referral</span>
+                        <span style="background:rgba(244,196,48,0.1);color:var(--gold);border:1px solid rgba(244,196,48,0.25);padding:5px 12px;border-radius:100px;font-size:12px;font-weight:700;">Walang limit!</span>
+                    </div>
+                    <button class="kumita-btn outline" onclick="document.getElementById('referralSection').scrollIntoView({behavior:'smooth'})">🎁 Makita ang Aking Code</button>
+                </div>
+            </div>
+
+            <!-- Gig Board Section -->
+            <div id="gigSection" class="fade-in" style="margin-bottom:48px;">
+                <h3 style="color:#fff;font-size:1.3rem;margin-bottom:6px;">📋 SJDM Local Gig Board</h3>
+                <p style="color:rgba(255,255,255,0.55);font-size:13.5px;margin-bottom:20px;">Mag-post ng trabaho o sagutin ang available gigs sa paligid mo.</p>
+                <!-- Post Form -->
+                <div class="gig-post-form">
+                    <input type="text" class="gig-input" id="gigTitle" placeholder="Ano ang trabaho? (e.g. Hatid ng grocery sa Kaypian)">
+                    <select class="gig-select" id="gigType">
+                        <option value="delivery">📦 Delivery</option>
+                        <option value="errand">🛒 Errand</option>
+                        <option value="transport">🚗 Transport</option>
+                        <option value="other">🔧 Other</option>
+                    </select>
+                    <input type="text" class="gig-input" id="gigPay" placeholder="Bayad (e.g. ₱150)" style="max-width:130px;">
+                    <button class="gig-submit" onclick="postGig()">+ Post Gig</button>
+                </div>
+                <!-- Live Gig List -->
+                <div class="gig-board" id="gigBoard"></div>
+            </div>
+
+            <!-- Referral Section -->
+            <div id="referralSection" class="referral-box fade-in">
+                <div class="referral-code-wrap">
+                    <p>🎁 Ang iyong personal referral code — i-share sa mga kaibigan mo!</p>
+                    <div class="referral-code">
+                        <span id="myReferralCode">BIYAHERO-7X29</span>
+                        <button class="copy-btn" onclick="copyReferral()">📋 Copy</button>
+                    </div>
+                    <p style="margin-top:10px;font-size:12px;">Share mo rin itong link: <span style="color:var(--gold);">biyahero.app/join?ref=7X29</span></p>
+                </div>
+                <div class="referral-stats">
+                    <div class="ref-stat">
+                        <strong id="refCount">0</strong>
+                        <span>Referrals</span>
+                    </div>
+                    <div class="ref-stat">
+                        <strong id="refEarned">₱0</strong>
+                        <span>Nakita mo</span>
+                    </div>
+                    <div class="ref-stat">
+                        <strong id="refPending">₱0</strong>
+                        <span>Pending</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Driver Application Modal -->
+    <div class="kumita-modal" id="driverModal">
+        <div class="kumita-modal-box">
+            <button class="kumita-modal-close" onclick="document.getElementById('driverModal').classList.remove('open')">✕</button>
+            <div id="driverFormView">
+                <h3>🚗 Driver Partner Application</h3>
+                <p>I-fill out ang form at makikipag-ugnayan ang aming team sa loob ng 24 oras.</p>
+                <div class="driver-form" id="driverForm">
+                    <div class="driver-field">
+                        <label>Pangalan</label>
+                        <input type="text" id="driverName" placeholder="Juan Dela Cruz">
+                    </div>
+                    <div class="driver-field">
+                        <label>Phone Number</label>
+                        <input type="text" id="driverPhone" placeholder="09xx-xxx-xxxx">
+                    </div>
+                    <div class="driver-field">
+                        <label>Uri ng Sasakyan</label>
+                        <select id="driverVehicle">
+                            <option value="">— Pumili —</option>
+                            <option>Private Car</option>
+                            <option>Tricycle</option>
+                            <option>Jeepney</option>
+                            <option>Multicab</option>
+                            <option>Motorcycle (habal-habal)</option>
+                        </select>
+                    </div>
+                    <div class="driver-field">
+                        <label>Preferred Area</label>
+                        <select id="driverArea">
+                            <option value="">— Pumili —</option>
+                            <option>Tungko Area</option>
+                            <option>Muzon Area</option>
+                            <option>Sapang Palay Area</option>
+                            <option>Kaypian Area</option>
+                            <option>Buong SJDM</option>
+                        </select>
+                    </div>
+                    <div class="driver-field full">
+                        <label>Availability</label>
+                        <select id="driverAvail">
+                            <option>Buong araw (Full-time)</option>
+                            <option>Umaga lang (6AM–12PM)</option>
+                            <option>Hapon lang (12PM–6PM)</option>
+                            <option>Gabi lang (6PM–10PM)</option>
+                            <option>Weekends lang</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="driver-perks" style="margin-top:16px;">
+                    <div class="perk-row"><div class="perk-check">✓</div><div class="perk-text"><strong>Free registration — walang bayad</strong><span>Libre ang pag-sign up, kumita ka agad</span></div></div>
+                    <div class="perk-row"><div class="perk-check">✓</div><div class="perk-text"><strong>Set your own rate</strong><span>Ikaw ang magse-set ng presyo ng iyong serbisyo</span></div></div>
+                </div>
+                <button class="kumita-btn" style="width:100%;justify-content:center;" onclick="submitDriverApp()">Isumite ang Application ✓</button>
+            </div>
+            <div id="driverSuccessView" style="display:none;">
+                <div class="success-anim">
+                    <span class="big-emoji">🎉</span>
+                    <h4>Application Received!</h4>
+                    <p>Salamat! Makikipag-ugnayan kami sa iyo sa loob ng 24 oras. Samantala, ibahagi mo na ang Biyahero sa iyong mga kaibigan!</p>
+                    <button class="kumita-btn" style="margin-top:16px;" onclick="document.getElementById('driverModal').classList.remove('open');document.getElementById('driverSuccessView').style.display='none';document.getElementById('driverFormView').style.display='block';">Isara</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
+
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
@@ -1146,6 +1665,7 @@
                         <li><a href="#clock">Rush Hour Status</a></li>
                         <li><a href="#terminals">Terminal Guide</a></li>
                         <li><a href="#checklist">Commuter Checklist</a></li>
+                        <li><a href="#kumita">💸 Kumita (Earn)</a></li>
                         <li><a href="#emergency">Emergency Contacts</a></li>
                     </ul>
                 </div>
@@ -1489,55 +2009,8 @@
         const f=document.getElementById('calcFrom'),t=document.getElementById('calcTo');
         const tmp=f.value;f.value=t.value;t.value=tmp;
     });
-    document.getElementById('calcBtn').addEventListener('click',()=>{
-        const from=document.getElementById('calcFrom').value,to=document.getElementById('calcTo').value,mode=document.getElementById('calcMode').value,trip=parseInt(document.getElementById('calcTrip').value);
-        if(!from||!to){alert('Please select both origin and destination!');return;}
-        if(from===to){document.getElementById('calcResult').innerHTML='<div class="calc-placeholder"><span>😅</span><p>Origin and destination are the same.</p></div>';return;}
-        let data=fareMatrix[from]&&fareMatrix[from][to]&&fareMatrix[from][to][mode];
-        /* ── Smart fallback: estimate fare for any unlisted combination ── */
-        if(!data){
-            /* Try reverse direction first */
-            const rev=fareMatrix[to]&&fareMatrix[to][from]&&fareMatrix[to][from][mode];
-            if(rev){
-                data={base:rev.base,range:rev.range,time:rev.time,steps:[...rev.steps].reverse()};
-            } else {
-                /* Try any available mode for this pair to get a base fare */
-                const pair=(fareMatrix[from]&&fareMatrix[from][to])||(fareMatrix[to]&&fareMatrix[to][from]);
-                const anyMode=pair&&(pair.jeepney||pair.tricycle||pair.multicab||pair.bus||pair.uv);
-                /* Mode multipliers vs jeepney base */
-                const mult={jeepney:1,tricycle:2.5,multicab:1.4,bus:1.8,uv:1.6};
-                let base,range,time,steps;
-                if(anyMode){
-                    const jeepBase=pair.jeepney?pair.jeepney.base:anyMode.base;
-                    base=Math.round(jeepBase*(mult[mode]||1));
-                    const lo=Math.round(base*0.85),hi=Math.round(base*1.25);
-                    range='₱'+lo+'–'+hi;
-                    /* derive time from any known mode */
-                    time=anyMode.time||'20–35 min';
-                    steps=[anyMode.steps?anyMode.steps[0]:from+' → '+to];
-                } else {
-                    /* Completely unknown pair — use sensible SJDM defaults per mode */
-                    const defaults={jeepney:{base:18,lo:15,hi:25,time:'20–35 min'},tricycle:{base:45,lo:38,hi:58,time:'18–30 min'},multicab:{base:22,lo:18,hi:28,time:'18–30 min'},bus:{base:32,lo:28,hi:40,time:'25–45 min'},uv:{base:28,lo:24,hi:35,time:'22–40 min'}};
-                    const d=defaults[mode]||defaults.jeepney;
-                    base=d.base;range='₱'+d.lo+'–'+d.hi;time=d.time;
-                    steps=[from.replace(/_/g,' ')+' → '+to.replace(/_/g,' ')];
-                }
-                const modeIcon=mode==='tricycle'?'🛺':mode==='multicab'?'🚐':mode==='bus'?'🚌':mode==='uv'?'🚐':'🚎';
-                data={base,range,time,steps,estimated:true};
-            }
-        }
-        const total=data.base*pax*trip;
-        const modeName=mode==='bus'?'🚌 Bus (A/C)':mode==='uv'?'🚐 UV Express':mode==='tricycle'?'🛺 Tricycle':mode==='multicab'?'🚐 Multicab':'🚎 Jeepney';
-        const fromName=document.getElementById('calcFrom').options[document.getElementById('calcFrom').selectedIndex].text;
-        const toName=document.getElementById('calcTo').options[document.getElementById('calcTo').selectedIndex].text;
-        const cMapsOrigin=encodeURIComponent(fromName+', San Jose del Monte, Bulacan, Philippines');
-        const cMapsDest=encodeURIComponent(toName+', San Jose del Monte, Bulacan, Philippines');
-        const cMapsUrl='https://www.google.com/maps/dir/?api=1&origin='+cMapsOrigin+'&destination='+cMapsDest+'&travelmode=transit';
-        const cMapsBtn='<a href="'+cMapsUrl+'" target="_blank" rel="noopener" class="maps-btn" style="margin-top:16px"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 4C15.163 4 8 11.163 8 20c0 13 16 24 16 24s16-11 16-24c0-8.837-7.163-16-16-16z" fill="#EA4335"/><circle cx="24" cy="20" r="6" fill="#fff"/></svg>Open in Google Maps</a>';
-        const summaryCards='<div class="plan-summary" style="margin-top:16px"><div class="plan-sum-item"><span>Est. Fare</span><strong>'+data.range+'</strong></div><div class="plan-sum-item"><span>Total Time</span><strong>'+data.time+'</strong></div><div class="plan-sum-item"><span>Passengers</span><strong>'+pax+(trip===2?' (RT)':'')+'</strong></div></div>';
-        const estimatedNote=data.estimated?'<div style="font-size:12px;color:var(--sky);background:rgba(41,169,225,0.08);border:1px solid rgba(41,169,225,0.2);border-radius:8px;padding:7px 12px;margin-bottom:12px;">📊 Estimated based on nearby route data — actual fare may vary slightly.</div>':'';
-        document.getElementById('calcResult').innerHTML='<div class="result-output"><div class="result-route-lbl">'+fromName+' <span style="color:var(--muted)">\u2192</span> '+toName+'</div>'+estimatedNote+'<div class="result-rows"><div class="result-row"><span class="result-row-lbl">Mode</span><span class="result-row-val">'+modeName+'</span></div><div class="result-row"><span class="result-row-lbl">Base Fare (1 person)</span><span class="result-row-val">'+data.range+'</span></div><div class="result-row"><span class="result-row-lbl">Passengers</span><span class="result-row-val">'+pax+'</span></div><div class="result-row"><span class="result-row-lbl">Trip Type</span><span class="result-row-val">'+(trip===2?'Round Trip':'One-way')+'</span></div><div class="result-row"><span class="result-row-lbl">Est. Travel Time</span><span class="result-row-val">'+data.time+'</span></div><div class="result-row"><span class="result-row-lbl">Route</span><span class="result-row-val" style="font-size:12px">'+data.steps.join(' \u2192 ')+'</span></div></div><div class="result-total"><span class="result-total-lbl">Estimated Total ('+pax+' pax'+(trip===2?', round trip':'')+')</span><span class="result-total-val">~\u20b1'+(data.base*pax*trip).toLocaleString()+'</span></div>'+summaryCards+cMapsBtn+'</div>';
-    });
+    /* calcBtn is now handled by patchFareCalculatorWithSubscription() in subscription.js
+       which intercepts the click, shows the plan modal, then runs the fare calculation. */
 
     /* ─── TERMINAL GUIDE ─── */
     function renderTerminal(key){
@@ -1647,9 +2120,131 @@
         faqMessages.scrollTop=faqMessages.scrollHeight;
     }
 
-    /* ─── HAMBURGER ─── */
-    document.getElementById('hamburgerBtn').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
-    document.querySelectorAll('.mobile-nav a').forEach(a=>a.addEventListener('click',()=>document.getElementById('mobileMenu').classList.remove('open')));
+
+    /* ─── KUMITA: GIG BOARD ─── */
+    const sampleGigs=[
+        {title:'Delivery ng grocery mula SM SJDM papuntang Colinas Verdes',type:'delivery',pay:'₱120',poster:'Ana M.',time:'5 mins ago'},
+        {title:'Sunduin ang bata sa Kaypian Elementary',type:'transport',pay:'₱200',poster:'Ramon L.',time:'12 mins ago'},
+        {title:'Bili ng gamot sa Mercury Drug Tungko',type:'errand',pay:'₱80',poster:'Mely R.',time:'28 mins ago'},
+        {title:'Hatid ng documents sa SJDM City Hall',type:'delivery',pay:'₱150',poster:'Jose T.',time:'1 hr ago'},
+    ];
+    let gigList=[...sampleGigs];
+    function renderGigs(){
+        const board=document.getElementById('gigBoard');
+        if(!board)return;
+        board.innerHTML=gigList.map((g,i)=>`
+            <div class="gig-item">
+                <div class="gig-item-left">
+                    <div class="gig-title"><span class="gig-type-tag ${g.type}">${g.type==='delivery'?'📦 Delivery':g.type==='errand'?'🛒 Errand':g.type==='transport'?'🚗 Transport':'🔧 Other'}</span>${g.title}</div>
+                    <div class="gig-meta">Posted by <strong style="color:rgba(255,255,255,0.7)">${g.poster}</strong> · ${g.time}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div class="gig-pay">${g.pay}</div>
+                    <button class="gig-contact-btn" onclick="alert('📱 Makikipag-ugnayan sa poster. (Feature coming soon!)')">Tanggapin</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    function postGig(){
+        const title=document.getElementById('gigTitle').value.trim();
+        const type=document.getElementById('gigType').value;
+        const pay=document.getElementById('gigPay').value.trim()||'Negotiable';
+        if(!title){alert('Ilagay ang paglalarawan ng trabaho!');return;}
+        gigList.unshift({title,type,pay:pay.startsWith('₱')?pay:'₱'+pay,poster:'Ikaw',time:'Just now'});
+        renderGigs();
+        document.getElementById('gigTitle').value='';
+        document.getElementById('gigPay').value='';
+    }
+    renderGigs();
+
+    /* ─── KUMITA: REFERRAL ─── */
+    function generateCode(){
+        const stored=localStorage.getItem('biyahero_ref_code');
+        if(stored)return stored;
+        const code='BIYAHERO-'+Math.random().toString(36).toUpperCase().slice(2,6);
+        localStorage.setItem('biyahero_ref_code',code);
+        return code;
+    }
+    const refCode=generateCode();
+    const refEl=document.getElementById('myReferralCode');
+    if(refEl)refEl.textContent=refCode;
+    function copyReferral(){
+        const code=document.getElementById('myReferralCode').textContent;
+        navigator.clipboard.writeText('biyahero.app/join?ref='+code.split('-')[1]).then(()=>{
+            const btn=document.querySelector('.copy-btn');
+            btn.textContent='✅ Copied!';
+            setTimeout(()=>{btn.textContent='📋 Copy';},2000);
+        }).catch(()=>{
+            const btn=document.querySelector('.copy-btn');
+            btn.textContent='✅ Copied!';
+            setTimeout(()=>{btn.textContent='📋 Copy';},2000);
+        });
+    }
+    /* Load referral stats from localStorage */
+    function loadRefStats(){
+        const refs=parseInt(localStorage.getItem('biyahero_ref_count')||'0');
+        document.getElementById('refCount').textContent=refs;
+        document.getElementById('refEarned').textContent='₱'+(refs*50);
+        document.getElementById('refPending').textContent='₱0';
+    }
+    loadRefStats();
+
+    /* ─── KUMITA: DRIVER APPLICATION ─── */
+    function submitDriverApp(){
+        const name=document.getElementById('driverName').value.trim();
+        const phone=document.getElementById('driverPhone').value.trim();
+        const vehicle=document.getElementById('driverVehicle').value;
+        if(!name||!phone||!vehicle){alert('Kumpletuhin ang lahat ng fields!');return;}
+        document.getElementById('driverFormView').style.display='none';
+        document.getElementById('driverSuccessView').style.display='block';
+        localStorage.setItem('biyahero_driver_applied','1');
+    }
+    /* Close modal on backdrop click */
+    document.getElementById('driverModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+
+    /* ─── MEGA MENU — HOVER INTERACTION ─── */
+    (function(){
+        const navItems=document.querySelectorAll('.nav-links>li');
+        let hoverTimeout;
+        const HOVER_DELAY=150;
+        function closeAll(){document.querySelectorAll('.nav-links>li').forEach(l=>l.classList.remove('open'));}
+        function openMenu(li){closeAll();li.classList.add('open');}
+        navItems.forEach(item=>{
+            const trigger=item.querySelector('.nav-trigger');
+            const dropdown=item.querySelector('.mega-drop, .simple-drop');
+
+            if(trigger && dropdown){
+                item.addEventListener('mouseenter',function(){
+                    clearTimeout(hoverTimeout);
+                    hoverTimeout=setTimeout(()=>{openMenu(item);},HOVER_DELAY);
+                });
+                item.addEventListener('mouseleave',function(){
+                    clearTimeout(hoverTimeout);
+                    hoverTimeout=setTimeout(()=>{item.classList.remove('open');},HOVER_DELAY);
+                });
+                dropdown.addEventListener('mouseenter',function(){clearTimeout(hoverTimeout);});
+                dropdown.addEventListener('mouseleave',function(){
+                    clearTimeout(hoverTimeout);
+                    hoverTimeout=setTimeout(()=>{item.classList.remove('open');},HOVER_DELAY);
+                });
+            }
+        });
+        document.addEventListener('click',function(e){
+            if(!e.target.closest('.nav-links>li')){closeAll();}
+        });
+        document.querySelectorAll('.mega-item,.simple-drop a').forEach(a=>a.addEventListener('click',closeAll));
+    })();
+
+    document.getElementById('hamburgerBtn').addEventListener('click',()=>{
+        const btn=document.getElementById('hamburgerBtn');
+        const menu=document.getElementById('mobileMenu');
+        btn.classList.toggle('open');
+        menu.classList.toggle('open');
+    });
+    document.querySelectorAll('.mobile-nav a').forEach(a=>a.addEventListener('click',()=>{
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('hamburgerBtn').classList.remove('open');
+    }));
 
     /* ─── BACK TO TOP ─── */
     const btt=document.getElementById('backToTop');
@@ -1673,26 +2268,11 @@
 
     /* ─── SUBSCRIPTION CHECK ─── */
     const currentUser = localStorage.getItem('biyahero_current_user');
-    if(!currentUser){
-        document.getElementById('logoutBtn').style.display = 'none';
-    }
     if(currentUser && typeof SubscriptionManager !== 'undefined'){
         SubscriptionManager.updateStatusIndicator(currentUser);
-        // Show logout button if user is logged in
-        document.getElementById('logoutBtn').style.display = 'block';
-        // Check access and show payment modal if needed
         if(!SubscriptionManager.hasAccess(currentUser)){
-            setTimeout(()=>{
-                SubscriptionManager.showPaymentModal();
-            }, 1000);
+            setTimeout(()=>{ SubscriptionManager.showPaymentModal(); }, 1000);
         }
-    }
-
-    /* ─── LOGOUT FUNCTION ─── */
-    function doLogout(){
-        localStorage.removeItem('biyahero_current_user');
-        localStorage.removeItem('biyahero_session');
-        location.href = 'login/login.html';
     }
     </script>
     <script src="js/subscription.js"></script>

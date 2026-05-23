@@ -7,13 +7,14 @@ The Subscription and Monetization Module is designed to manage user access, simu
 ## Features
 
 ### 1. Free Trial Access
-- **Duration**: 1 month (30 days) of unrestricted access
+- **Basic Plan**: 7 days of unrestricted access
+- **Premium Plan**: 30 days of unrestricted access
 - **Automatic Activation**: Applied to all newly registered users
 - **Full Feature Access**: Users can explore all system features during trial period
 
-### 2. One-Time Payment
-- **Cost**: ₱59 (Fifty-Nine Pesos)
-- **Type**: Non-recurring, one-time payment
+### 2. Subscription Payment
+- **Cost**: ₱59 (Basic) / ₱129 (Premium)
+- **Type**: One-time payment after trial
 - **Access Restoration**: Full access restored immediately after payment
 - **Payment Simulation**: Educational/demo payment flow
 
@@ -57,7 +58,7 @@ The `SubscriptionManager` object in `js/subscription.js` handles all subscriptio
 - `hasAccess(email)` - Checks if user has active access
 - `getStatus(email)` - Returns subscription status (trial, active, expired)
 - `getTrialDaysRemaining(email)` - Returns days left in trial
-- `processPayment(email)` - Processes one-time payment
+- `processPayment(email)` - Processes lifetime payment
 - `showPaymentModal()` - Displays payment modal
 - `showAdvertisement()` - Displays pop-up advertisement
 - `updateStatusIndicator(email)` - Updates UI status badge
@@ -142,9 +143,10 @@ Located in the navbar, displays current subscription status:
 ## Customization
 
 ### Adjust Trial Period
-Edit `TRIAL_DAYS` in `js/subscription.js`:
+Edit trial duration constants in `js/subscription.js`:
 ```javascript
-TRIAL_DAYS: 30, // Change to desired number of days
+TRIAL_DAYS_BASIC: 7,   // Basic plan trial duration
+TRIAL_DAYS_PREMIUM: 30, // Premium plan trial duration
 ```
 
 ### Adjust Payment Amount
