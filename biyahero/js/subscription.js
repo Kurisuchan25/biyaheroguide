@@ -4,44 +4,56 @@
  * 
  * NEW: showPlanModal() — triggered by "Calculate Fare" button before showing results.
  *      Detects new vs returning users, surfaces plan cards, and gates the result.
+ * 
+ * UPDATED: Now uses API client for database operations instead of localStorage
  */
 
 const SubscriptionManager = {
     TRIAL_DAYS_BASIC: 7,
     TRIAL_DAYS_PREMIUM: 30,
     PAYMENT_AMOUNT: 59,
+    
+    // Cache for subscription data to reduce API calls
+    _subscriptionCache: null,
+    _cacheExpiry: null,
 
     /* ───────── Core Data Helpers ───────── */
 
-    initSubscription: function (email) {
-        const userData = {
-            email: email,
-            registrationDate: new Date().toISOString(),
-            trialEndDate: new Date(Date.now() + this.TRIAL_DAYS_PREMIUM * 24 * 60 * 60 * 1000).toISOString(),
-            hasPaid: false,
-            plan: 'free',          // 'free' | 'basic' | 'premium'
-            paymentDate: null,
-            subscriptionStatus: 'trial',
-            adCount: 0,
-            fareCalcCount: 0,      // track usage on free tier
-            trialActivated: false  // has the user explicitly started their trial?
-        };
-        localStorage.setItem('biyahero_subscription_' + email, JSON.stringify(userData));
-        return userData;
+    async initSubscription(email) {
+        // Initialize via API - subscription is created automatically on user registration
+        const subData = await ApiClient.getSubscriptionStatus();
+        if (subData) {
+            this._subscriptionCache = subData;
+            this._cacheExpiry = Date.now() + 60000; // Cache for 1 minute
+            return subData;
+        }
+        return null;
     },
 
-    getSubscription: function (email) {
-        const data = localStorage.getItem('biyahero_subscription_' + email);
-        if (!data) return null;
-        return JSON.parse(data);
+    async getSubscription(email) {
+        // Use cached data if available and not expired
+        if (this._subscriptionCache && this._cacheExpiry && Date.now() < this._cacheExpiry) {
+            return this._subscriptionCache;
+        }
+        
+        // Fetch from API
+        const subData = await ApiClient.getSubscriptionStatus();
+        if (subData) {
+            this._subscriptionCache = subData;
+            this._cacheExpiry = Date.now() + 60000; // Cache for 1 minute
+            return subData;
+        }
+        return null;
     },
 
-    saveSubscription: function (sub) {
-        localStorage.setItem('biyahero_subscription_' + sub.email, JSON.stringify(sub));
+    saveSubscription(sub) {
+        // Save is handled by API calls, this is for backward compatibility
+        this._subscriptionCache = sub;
+        this._cacheExpiry = Date.now() + 60000;
     },
 
-    hasAccess: function (email) {
-        const sub = this.getSubscription(email);
+    async hasAccess(email) {
+        const sub = await this.getSubscription(email);
         if (!sub) return false;
 
         // Active paid subscription
@@ -50,21 +62,16 @@ const SubscriptionManager = {
         }
 
         // Active trial
-        if (sub.trialActivated) {
-            const now = new Date();
-            const trialEnd = new Date(sub.trialEndDate);
-            return now < trialEnd;
+        if (sub.trialActivated && sub.trialDaysRemaining > 0) {
+            return true;
         }
 
         return false;
     },
 
-    getStatus: function (email) {
-        const sub = this.getSubscription(email);
+    async getStatus(email) {
+        const sub = await this.getSubscription(email);
         if (!sub) return 'none';
-
-        const now = new Date();
-        const trialEnd = sub.trialEndDate ? new Date(sub.trialEndDate) : null;
 
         // Active paid subscription
         if (sub.hasPaid && (sub.plan === 'basic' || sub.plan === 'premium')) {
@@ -72,12 +79,12 @@ const SubscriptionManager = {
         }
 
         // Active trial
-        if (sub.trialActivated && trialEnd && now < trialEnd) {
+        if (sub.trialActivated && sub.trialDaysRemaining > 0) {
             return 'trial';
         }
 
         // Expired trial or subscription
-        if (sub.trialActivated && trialEnd && now >= trialEnd) {
+        if (sub.trialActivated && sub.trialDaysRemaining === 0) {
             return 'expired';
         }
 
@@ -85,36 +92,33 @@ const SubscriptionManager = {
         return 'new';
     },
 
-    getTrialDaysRemaining: function (email) {
-        const sub = this.getSubscription(email);
+    async getTrialDaysRemaining(email) {
+        const sub = await this.getSubscription(email);
         if (!sub || sub.hasPaid) return 0;
-        const now = new Date();
-        const trialEnd = new Date(sub.trialEndDate);
-        const diffDays = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
-        return Math.max(0, diffDays);
+        return sub.trialDaysRemaining || 0;
     },
 
-    processPayment: function (email, plan) {
-        const sub = this.getSubscription(email);
-        if (!sub) return false;
-        sub.hasPaid = true;
-        sub.plan = plan || 'basic';
-        sub.paymentDate = new Date().toISOString();
-        sub.subscriptionStatus = 'active';
-        this.saveSubscription(sub);
-        return true;
+    async processPayment(email, plan) {
+        const amount = plan === 'premium' ? 129 : 59;
+        const result = await ApiClient.processPayment(plan, amount);
+        if (result.success) {
+            // Clear cache to force refresh
+            this._subscriptionCache = null;
+            this._cacheExpiry = null;
+            return true;
+        }
+        return false;
     },
 
-    activateTrial: function (email, plan = 'premium') {
-        const sub = this.getSubscription(email);
-        if (!sub || sub.trialActivated) return false;
-        sub.trialActivated = true;
-        const trialDays = plan === 'basic' ? this.TRIAL_DAYS_BASIC : this.TRIAL_DAYS_PREMIUM;
-        sub.trialEndDate = new Date(Date.now() + trialDays * 24 * 60 * 60 * 1000).toISOString();
-        sub.plan = plan; // Set the plan being trialed
-        sub.subscriptionStatus = 'trial';
-        this.saveSubscription(sub);
-        return true;
+    async activateTrial(email, plan = 'premium') {
+        const result = await ApiClient.activateTrial(plan);
+        if (result.success) {
+            // Clear cache to force refresh
+            this._subscriptionCache = null;
+            this._cacheExpiry = null;
+            return true;
+        }
+        return false;
     },
 
     /* ───────── PLAN MODAL (main new feature) ───────── */
@@ -123,20 +127,24 @@ const SubscriptionManager = {
      * Called when the user clicks "Calculate Fare".
      * @param {Function} onProceed — called when user should see the fare result
      */
-    showPlanModalBeforeFare: function (onProceed) {
-        const email = localStorage.getItem('biyahero_current_user');
+    async showPlanModalBeforeFare(onProceed) {
+        const email = ApiClient.getCurrentUserEmail();
 
-        // If no email, create an anonymous guest entry so the flow works
-        const guestEmail = email || ('guest_' + (localStorage.getItem('biyahero_guest_id') || this._createGuestId()));
-        if (!email) localStorage.setItem('biyahero_current_user', guestEmail);
+        // If no email, redirect to login
+        if (!email || !ApiClient.isLoggedIn()) {
+            // Redirect to login page
+            window.location.href = 'landingpage/login.php';
+            return;
+        }
 
-        let sub = this.getSubscription(guestEmail);
-        if (!sub) sub = this.initSubscription(guestEmail);
+        // Get subscription from API
+        let sub = await this.getSubscription(email);
+        if (!sub) sub = await this.initSubscription(email);
 
-        const status = this.getStatus(guestEmail);
+        const status = await this.getStatus(email);
 
         // Always show modal to display current plan status (even for active users)
-        this._renderPlanModal(guestEmail, status, onProceed);
+        this._renderPlanModal(email, status, onProceed);
     },
 
     _createGuestId: function () {
@@ -356,9 +364,9 @@ const SubscriptionManager = {
         }
     },
 
-    _startTrial: function (email, event, plan = 'premium') {
+    async _startTrial(email, event, plan = 'premium') {
         if (event) event.preventDefault();
-        this.activateTrial(email, plan);
+        await this.activateTrial(email, plan);
         const cb = window._onProceed;
         this._closePlanModal();
         this._showTrialActivatedBanner(plan);
@@ -371,7 +379,7 @@ const SubscriptionManager = {
         if (event) event.preventDefault();
     },
 
-    _selectPaid: function (email, plan, event) {
+    async _selectPaid(email, plan, event) {
         if (event) event.preventDefault();
         const cb = window._onProceed;
 
@@ -382,11 +390,11 @@ const SubscriptionManager = {
             btn.disabled = true;
         }
 
-        setTimeout(() => {
-            this.processPayment(email, plan);
+        setTimeout(async () => {
+            await this.processPayment(email, plan);
             this._closePlanModal();
             this.showPaymentSuccess(plan);
-            this.updateStatusIndicator(email);
+            await this.updateStatusIndicator(email);
             if (cb) setTimeout(cb, 2200);
         }, 1600);
     },
@@ -519,14 +527,18 @@ const SubscriptionManager = {
         }, 3500);
     },
 
-    showAdvertisement: function () {
-        const email = localStorage.getItem('biyahero_current_user');
-        const sub = email ? this.getSubscription(email) : null;
+    async showAdvertisement() {
+        const email = ApiClient.getCurrentUserEmail();
+        if (!email) return;
+        
+        const sub = await this.getSubscription(email);
         if (!sub) return;
         if (sub.hasPaid && sub.plan === 'premium') return; // no ads for premium
-        sub.adCount++;
-        this.saveSubscription(sub);
-        if (sub.adCount % 3 === 0) this.showAdModal();
+        
+        await ApiClient.incrementAdCount();
+        
+        // Show ad every 3 views
+        if ((sub.adCount + 1) % 3 === 0) this.showAdModal();
     },
 
     showAdModal: function () {
@@ -569,13 +581,13 @@ const SubscriptionManager = {
         if (modal) modal.remove();
     },
 
-    updateStatusIndicator: function (email) {
-        const status = this.getStatus(email);
+    async updateStatusIndicator(email) {
+        const status = await this.getStatus(email);
         const indicator = document.querySelector('.subscription-status');
         if (!indicator) return;
-        const daysRemaining = this.getTrialDaysRemaining(email);
+        const daysRemaining = await this.getTrialDaysRemaining(email);
         if (status === 'active') {
-            const sub = this.getSubscription(email);
+            const sub = await this.getSubscription(email);
             const plan = sub && sub.plan ? sub.plan.charAt(0).toUpperCase() + sub.plan.slice(1) : 'Premium';
             indicator.innerHTML = `<span class="status-badge active">✓ ${plan} Access</span>`;
         } else if (status === 'trial') {
@@ -598,7 +610,7 @@ const SubscriptionManager = {
  * This function is called at the bottom of the page's own DOMContentLoaded
  * handler — or call it manually after the page JS has set up the calcBtn listener.
  */
-function patchFareCalculatorWithSubscription() {
+async function patchFareCalculatorWithSubscription() {
     const calcBtn = document.getElementById('calcBtn');
     if (!calcBtn) return;
 
@@ -606,14 +618,14 @@ function patchFareCalculatorWithSubscription() {
     const newBtn = calcBtn.cloneNode(true);
     calcBtn.parentNode.replaceChild(newBtn, calcBtn);
 
-    newBtn.addEventListener('click', function () {
+    newBtn.addEventListener('click', async function () {
         // Pull inputs before the modal opens (values won't change while modal is open)
         const from = document.getElementById('calcFrom').value;
         const to = document.getElementById('calcTo').value;
 
         if (!from || !to) { alert('Please select both origin and destination!'); return; }
 
-        SubscriptionManager.showPlanModalBeforeFare(function () {
+        await SubscriptionManager.showPlanModalBeforeFare(function () {
             // --- Actual fare calculation logic (mirrors original calcBtn handler) ---
             const mode = document.getElementById('calcMode').value;
             const trip = parseInt(document.getElementById('calcTrip').value);
@@ -654,8 +666,76 @@ function patchFareCalculatorWithSubscription() {
             }
 
             const modeName = mode === 'bus' ? '🚌 Bus (A/C)' : mode === 'uv' ? '🚐 UV Express' : mode === 'tricycle' ? '🛺 Tricycle' : mode === 'multicab' ? '🚐 Multicab' : '🚎 Jeepney';
-            const fromName = document.getElementById('calcFrom').options[document.getElementById('calcFrom').selectedIndex].text;
-            const toName = document.getElementById('calcTo').options[document.getElementById('calcTo').selectedIndex].text;
+            
+            // Location name mapping for Google Maps (uses consistent value-based names)
+            const locationNames = {
+                tungko: 'Tungko Terminal',
+                muzon: 'Muzon Junction',
+                sapang_palay: 'Sapang Palay',
+                grotto: 'Grotto',
+                kaypian: 'Kaypian',
+                sjdm_bayan: 'SJDM Bayan City Hall',
+                bagong_buhay: 'Bagong Buhay',
+                ciudad_real: 'Ciudad Real',
+                citrus: 'Citrus',
+                dulong_bayan: 'Dulong Bayan',
+                fatima: 'Fatima',
+                francisco_homes_guijo: 'Francisco Homes Guijo',
+                francisco_homes_mulawin: 'Francisco Homes Mulawin',
+                francisco_homes_narra: 'Francisco Homes Narra',
+                francisco_homes_yakal: 'Francisco Homes Yakal',
+                gaya_gaya: 'Gaya-Gaya',
+                graceville: 'Graceville',
+                gumaoc_east: 'Gumaoc East',
+                gumaoc_central: 'Gumaoc Central',
+                gumaoc_west: 'Gumaoc West',
+                kaybanban: 'Kaybanban',
+                kaytitinga: 'Kaytitinga',
+                maharlika: 'Maharlika',
+                minuyan: 'Minuyan',
+                muzon_east: 'Muzon East',
+                muzon_west: 'Muzon West',
+                paradise: 'Paradise',
+                poblacion: 'Poblacion',
+                santo_cristo: 'Santo Cristo',
+                santo_nino: 'Santo Niño',
+                san_isidro: 'San Isidro',
+                san_manuel: 'San Manuel',
+                san_martin: 'San Martin',
+                san_pedro: 'San Pedro',
+                san_rafael: 'San Rafael',
+                sapang_palay_proper: 'Sapang Palay Proper',
+                tungkong_mangga: 'Tungkong Mangga',
+                bagong_buhay_homes: 'Bagong Buhay Homes',
+                bellevue: 'Bellevue',
+                camella_sjdm: 'Camella SJDM',
+                carissa_homes: 'Carissa Homes',
+                colinas_verdes: 'Colinas Verdes',
+                deca_homes: 'Deca Homes',
+                garden_villas: 'Garden Villas',
+                greenfields: 'Greenfields',
+                katarungan_village: 'Katarungan Village',
+                lancaster_new_city: 'Lancaster New City',
+                lessandra_sjdm: 'Lessandra SJDM',
+                metrogate_sjdm: 'Metrogate SJDM',
+                pleasant_hill: 'Pleasant Hill',
+                residencia_de_muzon: 'Residencia de Muzon',
+                san_jose_heights: 'San Jose Heights',
+                starmall_sjdm: 'Starmall SJDM',
+                sm_city_sjdm: 'SM City San Jose del Monte',
+                the_gardens_sjdm: 'The Gardens SJDM',
+                villa_antonio: 'Villa Antonio',
+                amana_waterpark: 'Amana Waterpark',
+                grotto_lourdes: 'Grotto of Our Lady of Lourdes',
+                mt_balagbag: 'Mt Balagbag',
+                kaytitinga_falls: 'Kaytitinga Falls',
+                towerville: 'Towerville'
+            };
+            
+            const fromValue = document.getElementById('calcFrom').value;
+            const toValue = document.getElementById('calcTo').value;
+            const fromName = locationNames[fromValue] || fromValue.replace(/_/g, ' ');
+            const toName = locationNames[toValue] || toValue.replace(/_/g, ' ');
 
             const cMapsOrigin = encodeURIComponent(fromName + ', San Jose del Monte, Bulacan, Philippines');
             const cMapsDest = encodeURIComponent(toName + ', San Jose del Monte, Bulacan, Philippines');

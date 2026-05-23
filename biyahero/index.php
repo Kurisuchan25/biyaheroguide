@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css">
     <link rel="stylesheet" href="css/subscription.css">
+    <script src="js/api.js"></script>
     <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js" type="module"></script>
     <style>
         :root {
@@ -1866,12 +1867,25 @@
     /* ─── RENDER ROUTES ─── */
     function renderRoutes(){
         const g=document.getElementById('routesGrid');
+        
+        // Location name mapping for Google Maps
+        const locationNames = {
+            'Tungko': 'Tungko Terminal',
+            'Muzon': 'Muzon Junction',
+            'Sapang Palay': 'Sapang Palay',
+            'Grotto': 'Grotto',
+            'Kaypian': 'Kaypian',
+            'SJDM Bayan': 'SJDM Bayan City Hall'
+        };
+        
         routes.forEach(r=>{
             const card=document.createElement('div');
             card.className='route-card fade-in';
             const parts=r.name.split('\u2192').map(s=>s.trim());
-            const mOrigin=encodeURIComponent((parts[0]||r.name)+', San Jose del Monte, Bulacan, Philippines');
-            const mDest=encodeURIComponent((parts[parts.length-1]||r.name)+', San Jose del Monte, Bulacan, Philippines');
+            const originName = locationNames[parts[0]] || parts[0];
+            const destName = locationNames[parts[parts.length-1]] || parts[parts.length-1];
+            const mOrigin=encodeURIComponent(originName+', San Jose del Monte, Bulacan, Philippines');
+            const mDest=encodeURIComponent(destName+', San Jose del Monte, Bulacan, Philippines');
             const mUrl='https://www.google.com/maps/dir/?api=1&origin='+mOrigin+'&destination='+mDest+'&travelmode=transit';
             const mapsBtn='<a href="'+mUrl+'" target="_blank" rel="noopener" class="maps-btn"><svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 4C15.163 4 8 11.163 8 20c0 13 16 24 16 24s16-11 16-24c0-8.837-7.163-16-16-16z" fill="#EA4335"/><circle cx="24" cy="20" r="6" fill="#fff"/></svg>Open in Google Maps</a>';
             card.innerHTML='<div class="route-hd"><h3>'+r.name+'</h3><div class="route-icons">'+r.icons.map(ic=>'<i class="fi fi-bs-'+ic+'"></i>').join('')+'</div></div><div class="step-list">'+r.steps.map(s=>'<div class="step-row"><div class="step-dot"></div><p>'+s+'</p></div>').join('')+'</div><div class="route-meta"><div class="meta-item"><span>Est. Fare</span><strong>'+r.info.fare+'</strong></div><div class="meta-item"><span>Total Time</span><strong>'+r.info.time+'</strong></div><div class="meta-item"><span>Distance</span><strong>'+r.info.distance+'</strong></div></div><div class="route-tip">&#128161; '+r.tip+'</div>'+mapsBtn;

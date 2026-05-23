@@ -560,12 +560,12 @@
 <!-- Nav -->
 <nav class="nav" id="mainNav">
     <div class="container">
-        <a href="login.html" class="logo">Biya<span style="color:var(--orange)">hero</span><span class="logo-dot"></span></a>
+        <a href="login.php" class="logo">Biya<span style="color:var(--orange)">hero</span><span class="logo-dot"></span></a>
         <ul class="nav-links">
             <li><a href="#about" class="active">About</a></li>
             <li><a href="#baguhan">Baguhan Guide</a></li>
             <li><a href="#firsttime">First-Time Visitor</a></li>
-            <li><a href="login.html" class="nav-cta">🗺️ Full Guide</a></li>
+            <li><a href="login.php" class="nav-cta">🗺️ Full Guide</a></li>
         </ul>
         <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
@@ -573,7 +573,7 @@
         <a href="#about">About Biyahero</a>
         <a href="#baguhan">Para sa mga Baguhan</a>
         <a href="#firsttime">First-Time Visitor</a>
-        <a href="login.html">🗺️ Full Commute Guide</a>
+        <a href="login.php">🗺️ Full Commute Guide</a>
     </div>
 </nav>
 
@@ -601,7 +601,7 @@
                     <div class="search-bar">
                         <span>📍</span>
                         <input type="text" placeholder="Barangay, Terminal, o Landmark…" />
-                        <button class="search-btn" onclick="window.location.href='login.html'">🔍</button>
+                        <button class="search-btn" onclick="window.location.href='login.php'">🔍</button>
                     </div>
                 </div>
 
@@ -845,10 +845,10 @@
                 <h2>Ang San Jose del Monte, <em>Bulacan</em></h2>
                 <p>Ang SJDM ay isang mabilis na lumalaking lungsod sa hilaga ng Metro Manila. Kilala sa maraming subdivision at residential areas. Ang pangunahing transportasyon ay jeepney, tricycle, at multicab.</p>
                 <div class="ftv-quick-links">
-                    <a href="login.html" class="ftv-link">🗺️ Mga Routes</a>
-                    <a href="login.html" class="ftv-link">💰 Fare Calc</a>
-                    <a href="login.html" class="ftv-link">🏢 Terminals</a>
-                    <a href="login.html" class="ftv-link">🚨 Emergency</a>
+                    <a href="login.php" class="ftv-link">🗺️ Mga Routes</a>
+                    <a href="login.php" class="ftv-link">💰 Fare Calc</a>
+                    <a href="login.php" class="ftv-link">🏢 Terminals</a>
+                    <a href="login.php" class="ftv-link">🚨 Emergency</a>
                 </div>
             </div>
             <div class="ftv-checklist">
@@ -963,8 +963,8 @@
             <h2>Handa ka na ba, <em>Biyahero</em>?</h2>
             <p>Ngayon ay alam mo na ang lahat ng basics. Gamitin ang buong Biyahero guide para sa routes, fare calculator, planner, at marami pa!</p>
             <div class="cta-btns">
-                <a href="login.html" class="btn-primary">🗺️ Buksan ang Full Guide</a>
-                <a href="login.html" class="btn-ghost">📋 Tingnan ang Routes</a>
+                <a href="login.php" class="btn-primary">🗺️ Buksan ang Full Guide</a>
+                <a href="login.php" class="btn-ghost">📋 Tingnan ang Routes</a>
             </div>
         </div>
     </div>
@@ -989,11 +989,11 @@
             <div class="footer-col">
                 <h4>Full Guide</h4>
                 <ul class="footer-links">
-                    <li><a href="login.html">Routes & Directions</a></li>
-                    <li><a href="login.html">Fare Calculator</a></li>
-                    <li><a href="login.html">Commute Planner</a></li>
-                    <li><a href="login.html">Terminal Guide</a></li>
-                    <li><a href="login.html">Emergency Hotlines</a></li>
+                    <li><a href="login.php">Routes & Directions</a></li>
+                    <li><a href="login.php">Fare Calculator</a></li>
+                    <li><a href="login.php">Commute Planner</a></li>
+                    <li><a href="login.php">Terminal Guide</a></li>
+                    <li><a href="login.php">Emergency Hotlines</a></li>
                 </ul>
             </div>
         </div>

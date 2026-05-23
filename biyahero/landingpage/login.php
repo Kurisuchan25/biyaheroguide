@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js" type="module"></script>
   <link rel="stylesheet" href="../css/subscription.css">
+  <script src="../js/api.js"></script>
   <script src="../js/subscription.js"></script>
   <style>
     :root {
@@ -412,7 +413,7 @@
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
 
-    <a href="guest.html" class="hero-logo">
+    <a href="guestpage.php" class="hero-logo">
       Biya<span class="accent">hero</span>
       <span class="hero-logo-badge">Beta</span>
     </a>
@@ -612,7 +613,7 @@ function saveUsers(u)  { localStorage.setItem('biyahero_users', JSON.stringify(u
 function setSession(u) { localStorage.setItem('biyahero_session', JSON.stringify(u)); }
 function getSession()  { try { return JSON.parse(localStorage.getItem('biyahero_session')); } catch { return null; } }
 
-if (getSession()) { const dest = new URLSearchParams(location.search).get('redirect') || '../index.html'; location.href = dest; }
+if (getSession()) { const dest = new URLSearchParams(location.search).get('redirect') || '../index.php'; location.href = dest; }
 
 function switchTab(tab) {
   const slider = document.getElementById('tabSlider');
@@ -697,7 +698,7 @@ function doLogin(e) {
   setTimeout(()=>{
     const users=getUsers(), user=users.find(u=>u.email.toLowerCase()===email.toLowerCase()&&u.password===pass);
     setLoading('loginBtn',false);
-    if(user){setSession({email:user.email,first:user.first,last:user.last});localStorage.setItem('biyahero_current_user', user.email);openModal({type:'success',icon:'🎉',title:'Maligayang Pagbabalik!',body:`Kamusta, ${user.first}! Ikaw ay matagumpay na naka-login. Papunta ka na sa Biyahero Guide…`,actions:[{label:'Tuloy na!',primary:true,fn:()=>{closeModal();setTimeout(()=>{location.href=new URLSearchParams(location.search).get('redirect')||'../index.html';},300);}}]});}
+    if(user){setSession({email:user.email,first:user.first,last:user.last});localStorage.setItem('biyahero_current_user', user.email);openModal({type:'success',icon:'🎉',title:'Maligayang Pagbabalik!',body:`Kamusta, ${user.first}! Ikaw ay matagumpay na naka-login. Papunta ka na sa Biyahero Guide…`,actions:[{label:'Tuloy na!',primary:true,fn:()=>{closeModal();setTimeout(()=>{location.href=new URLSearchParams(location.search).get('redirect')||'../index.php';},300);}}]});}
     else{openModal({type:'error',icon:'🔐',title:'Mali ang Credentials',body:'Hindi namin makilala ang email o password na iyong inilagay. Subukan muli o mag-sign up.',actions:[{label:'Subukan Muli',primary:true,fn:closeModal},{label:'Mag-sign up',primary:false,fn:()=>{closeModal();switchTab('register');}}]});}
   },1000);
 }
@@ -723,7 +724,7 @@ function doRegister(e) {
       SubscriptionManager.initSubscription(email);
       localStorage.setItem('biyahero_current_user', email);
     }
-    openModal({type:'success',icon:'🎊',title:'Maligayang Pagdating, '+first+'!',body:'Ang iyong account ay matagumpay na nagawa. Ikaw ay nire-redirect sa Biyahero Guide ngayon…',actions:[{label:'Simulan Na!',primary:true,fn:()=>{closeModal();setTimeout(()=>{location.href=new URLSearchParams(location.search).get('redirect')||'../index.html';},300);}}]});
+    openModal({type:'success',icon:'🎊',title:'Maligayang Pagdating, '+first+'!',body:'Ang iyong account ay matagumpay na nagawa. Ikaw ay nire-redirect sa Biyahero Guide ngayon…',actions:[{label:'Simulan Na!',primary:true,fn:()=>{closeModal();setTimeout(()=>{location.href=new URLSearchParams(location.search).get('redirect')||'../index.php';},300);}}]});
   },1000);
 }
 
@@ -746,7 +747,7 @@ function doForgot() {
 }
 
 function doSocialLogin(provider) {
-  openModal({type:'info',icon:provider==='Google'?'🔵':'📘',title:provider+' Login (Demo)',body:`Ito ay demo mode. Sa production, ire-redirect ka sa ${provider}'s OAuth page.`,actions:[{label:'Sige, Tuloy',primary:true,fn:()=>{closeModal();setSession({email:`demo@${provider.toLowerCase()}.com`,first:'Demo',last:'User'});location.href=new URLSearchParams(location.search).get('redirect')||'../index.html';}},{label:'Kanselahin',primary:false,fn:closeModal}]});
+  openModal({type:'info',icon:provider==='Google'?'🔵':'📘',title:provider+' Login (Demo)',body:`Ito ay demo mode. Sa production, ire-redirect ka sa ${provider}'s OAuth page.`,actions:[{label:'Sige, Tuloy',primary:true,fn:()=>{closeModal();setSession({email:`demo@${provider.toLowerCase()}.com`,first:'Demo',last:'User'});location.href=new URLSearchParams(location.search).get('redirect')||'../index.php';}},{label:'Kanselahin',primary:false,fn:closeModal}]});
 }
 
 document.addEventListener('keydown',e=>{
