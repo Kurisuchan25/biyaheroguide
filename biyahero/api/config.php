@@ -27,7 +27,10 @@ class Database {
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             $this->conn->exec("set names utf8mb4");
         } catch(PDOException $e) {
-            echo "Connection error: " . $e->getMessage();
+            // Return JSON error instead of echoing HTML
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Database connection failed: ' . $e->getMessage()]);
+            exit;
         }
         
         return $this->conn;

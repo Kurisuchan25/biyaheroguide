@@ -4,7 +4,7 @@
  */
 
 // Determine the correct API base path based on current location
-const API_BASE = window.location.pathname.includes('/biyahero/') ? '../../api' : '/biyaheroguide/api';
+const API_BASE = window.location.pathname.includes('/biyahero/') ? '../api' : '/biyaheroguide/biyahero/api';
 
 const ApiClient = {
     // Authentication
