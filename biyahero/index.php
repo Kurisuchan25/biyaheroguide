@@ -208,6 +208,62 @@
             .simple-drop a:hover{background:rgba(255,255,255,0.08);color:#fff;transform:translateX(3px);}
             .simple-drop-div{height:1px;background:rgba(255,255,255,0.07);margin:6px 0;}
 
+            /* ── My Profile dropdown ── */
+            .profile-btn{
+                display:flex;align-items:center;gap:8px;
+                color:rgba(255,255,255,0.82);
+                background:rgba(255,255,255,0.07);
+                border:1px solid rgba(255,255,255,0.12);
+                border-radius:100px;
+                padding:7px 14px 7px 8px;
+                font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+                cursor:pointer;transition:all 0.22s;white-space:nowrap;
+            }
+            .profile-btn:hover{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.22);color:#fff;}
+            .profile-avatar{
+                width:28px;height:28px;border-radius:50%;
+                background:linear-gradient(135deg,var(--green-lt),var(--gold));
+                display:flex;align-items:center;justify-content:center;
+                font-size:13px;font-weight:700;color:#fff;flex-shrink:0;
+            }
+            .profile-chevron{font-size:10px;opacity:0.55;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),opacity 0.2s;margin-left:2px;}
+            .profile-li.open .profile-chevron{transform:rotate(180deg);opacity:1;}
+            .profile-drop{
+                position:absolute;top:calc(100% + 10px);right:0;
+                background:rgba(12,40,26,0.97);
+                backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+                border:1px solid rgba(255,255,255,0.1);
+                border-radius:18px;
+                box-shadow:0 24px 60px rgba(0,0,0,0.38),0 0 0 1px rgba(255,255,255,0.04) inset;
+                min-width:210px;padding:10px;z-index:999;
+                visibility:hidden;opacity:0;pointer-events:none;
+                transform:translateY(-10px) scale(0.97);
+                transition:opacity 0.28s cubic-bezier(0.16,1,0.3,1),transform 0.28s cubic-bezier(0.16,1,0.3,1),visibility 0s linear 0.28s;
+            }
+            .profile-li.open .profile-drop{
+                visibility:visible;opacity:1;pointer-events:auto;
+                transform:translateY(0) scale(1);
+                transition:opacity 0.28s cubic-bezier(0.16,1,0.3,1),transform 0.28s cubic-bezier(0.16,1,0.3,1),visibility 0s linear 0s;
+            }
+            .profile-drop-header{
+                padding:12px 14px 10px;
+                border-bottom:1px solid rgba(255,255,255,0.07);
+                margin-bottom:6px;
+            }
+            .profile-drop-name{font-size:13.5px;font-weight:700;color:#fff;margin-bottom:2px;}
+            .profile-drop-email{font-size:11.5px;color:rgba(255,255,255,0.38);}
+            .profile-drop a,.profile-drop button{
+                display:flex;align-items:center;gap:10px;width:100%;
+                color:rgba(255,255,255,0.75);text-decoration:none;
+                font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+                padding:10px 14px;border-radius:11px;border:none;background:transparent;cursor:pointer;text-align:left;
+                transition:background 0.18s,color 0.18s,transform 0.18s;
+            }
+            .profile-drop a:hover,.profile-drop button:hover{background:rgba(255,255,255,0.08);color:#fff;transform:translateX(3px);}
+            .profile-drop .profile-logout{color:#ff8a8a!important;}
+            .profile-drop .profile-logout:hover{background:rgba(255,107,107,0.12)!important;color:#ffbdbd!important;}
+            .profile-drop-div{height:1px;background:rgba(255,255,255,0.07);margin:6px 0;}
+
             /* Nav right actions */
             .nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
             .subscription-status{display:flex;align-items:center;}
@@ -834,8 +890,26 @@
 
             <div class="nav-actions">
                 <div class="subscription-status" id="subscriptionStatus"></div>
-                
-                
+
+                <!-- My Profile Dropdown -->
+                <div class="profile-li" id="profileNavItem" style="position:relative;display:flex;align-items:center;">
+                    <button class="profile-btn" id="profileBtn">
+                        <div class="profile-avatar">👤</div>
+                        My Profile
+                        <span class="profile-chevron">▾</span>
+                    </button>
+                    <div class="profile-drop" id="profileDrop">
+                        <div class="profile-drop-header">
+                            <div class="profile-drop-name">Biyahero User</div>
+                            <div class="profile-drop-email">user@biyahero.app</div>
+                        </div>
+                        <a href="#account"><span>👤</span> My Account</a>
+                        <a href="#settings"><span>⚙️</span> Settings</a>
+                        <div class="profile-drop-div"></div>
+                        <button class="profile-logout" type="button" onclick="doLogout(); return false;"><span>🚪</span> Log Out</button>
+                    </div>
+                </div>
+
                 <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
             </div>
         </div>
@@ -859,6 +933,11 @@
             <div class="mobile-nav-divider"></div>
             <a href="#kumita" class="m-kumita"><span class="m-icon" style="background:rgba(244,196,48,0.15)">💸</span>Kumita — Mag-earn</a>
             <a href="#emergency" class="m-cta"><span class="m-icon" style="background:rgba(255,107,107,0.15)">🚨</span>Emergency Contacts</a>
+            <div class="mobile-nav-divider"></div>
+            <div class="mobile-nav-section">My Profile</div>
+            <a href="#account"><span class="m-icon" style="background:rgba(82,183,136,0.15)">👤</span>My Account</a>
+            <a href="#settings"><span class="m-icon" style="background:rgba(41,169,225,0.15)">⚙️</span>Settings</a>
+            <a href="#" onclick="doLogout();return false;" style="color:#ff8a8a;"><span class="m-icon" style="background:rgba(255,107,107,0.15)">🚪</span>Log Out</a>
         </div>
     </nav>
 
@@ -2216,7 +2295,31 @@
     /* Close modal on backdrop click */
     document.getElementById('driverModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 
-    /* ─── MEGA MENU — HOVER INTERACTION ─── */
+     /* ─── MY PROFILE DROPDOWN ─── */
+    (function(){
+        var profileLi = document.getElementById('profileNavItem');
+        var profileBtn = document.getElementById('profileBtn');
+        var profileDrop = document.getElementById('profileDrop');
+        if (!profileLi || !profileBtn) return;
+        var closeTimer;
+        function openDrop(){ clearTimeout(closeTimer); profileLi.classList.add('open'); }
+        function closeDrop(){ closeTimer = setTimeout(function(){ profileLi.classList.remove('open'); }, 150); }
+        profileLi.addEventListener('mouseenter', openDrop);
+        profileLi.addEventListener('mouseleave', closeDrop);
+        profileBtn.addEventListener('click', function(e){
+            e.stopPropagation();
+            profileLi.classList.toggle('open');
+        });
+        document.addEventListener('click', function(e){
+            if (!profileLi.contains(e.target)) profileLi.classList.remove('open');
+        });
+        if (profileDrop) {
+            profileDrop.addEventListener('mouseenter', function(){ clearTimeout(closeTimer); });
+            profileDrop.addEventListener('mouseleave', closeDrop);
+        }
+    })();
+
+       /* ─── MEGA MENU — HOVER INTERACTION ─── */
     (function(){
         const navItems=document.querySelectorAll('.nav-links>li');
         let hoverTimeout;
@@ -2287,6 +2390,22 @@
         if(!SubscriptionManager.hasAccess(currentUser)){
             setTimeout(()=>{ SubscriptionManager.showPaymentModal(); }, 1000);
         }
+    }
+
+    /* ─── LOGOUT ─── */
+    async function doLogout(){
+        console.log('Logout function called');
+        // Clear all session/auth data from localStorage
+        localStorage.removeItem('biyahero_current_user');
+        localStorage.removeItem('biyahero_session');
+        try {
+            await ApiClient.logout();
+            console.log('API logout successful, redirecting...');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+        // Always redirect to login after logout
+        window.location.href = 'landingpage/login.php';
     }
     </script>
     <script src="js/subscription.js"></script>
