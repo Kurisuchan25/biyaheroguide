@@ -3,7 +3,8 @@
  * Handles communication with PHP backend
  */
 
-const API_BASE = '/api';
+// Determine the correct API base path based on current location
+const API_BASE = window.location.pathname.includes('/biyahero/') ? '../../api' : '/biyaheroguide/api';
 
 const ApiClient = {
     // Authentication
@@ -29,12 +30,16 @@ const ApiClient = {
 
     async login(email, password) {
         try {
-            const response = await fetch(`${API_BASE}/auth.php?action=login`, {
+            const url = `${API_BASE}/auth.php?action=login`;
+            console.log('Attempting login to:', url);
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
+            console.log('Response status:', response.status);
             const data = await response.json();
+            console.log('Response data:', data);
             if (data.success) {
                 localStorage.setItem('biyahero_session_token', data.data.sessionToken);
                 localStorage.setItem('biyahero_user_email', data.data.email);
@@ -43,7 +48,7 @@ const ApiClient = {
             return data;
         } catch (error) {
             console.error('Login error:', error);
-            return { success: false, message: 'Network error' };
+            return { success: false, message: 'Network error: ' + error.message };
         }
     },
 

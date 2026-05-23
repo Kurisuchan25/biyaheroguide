@@ -83,3 +83,13 @@ INSERT INTO fare_routes (origin, destination, mode, base_fare, fare_range_low, f
 ('SJDM Poblacion', 'Quezon City', 'uv', 28.00, 24.00, 35.00, '22-40 min', 'SJDM Poblacion → Quezon City'),
 ('Tungko Terminal', 'Quezon City', 'bus', 32.00, 28.00, 40.00, '25-45 min', 'Tungko Terminal → Quezon City'),
 ('Tungko Terminal', 'Quezon City', 'uv', 28.00, 24.00, 35.00, '22-40 min', 'Tungko Terminal → Quezon City');
+
+-- Insert default commuter user account
+-- Email: commuter@biyahero.com
+-- Password: commuter123
+INSERT INTO users (email, password, first_name, last_name) VALUES
+('commuter@biyahero.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Commuter', 'User');
+
+-- Create subscription for default user
+INSERT INTO subscriptions (user_id, plan, subscription_status) VALUES
+(1, 'free', 'new');

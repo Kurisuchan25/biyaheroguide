@@ -688,19 +688,30 @@ function closeModal() { document.getElementById('vOverlay').classList.remove('op
 function closeModalOutside(e) { if(e.target===document.getElementById('vOverlay'))closeModal(); }
 function setLoading(btnId,on) { const btn=document.getElementById(btnId); btn.classList.toggle('loading',on); btn.disabled=on; }
 
-function doLogin(e) {
+async function doLogin(e) {
   if(e)addRipple(e.currentTarget,e);
   const email=document.getElementById('loginEmail').value.trim(), pass=document.getElementById('loginPass').value, errs=[];
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))errs.push('Pakiusap maglagay ng wastong email address.');
   if(!pass)errs.push('Pakiusap maglagay ng iyong password.');
   if(errs.length){openModal({type:'error',icon:'⚠️',title:'Hindi Makapag-login',body:'Mangyaring ayusin ang mga sumusunod:',errors:errs,actions:[{label:'Subukan Muli',primary:true,fn:closeModal}]});return;}
   setLoading('loginBtn',true);
-  setTimeout(()=>{
-    const users=getUsers(), user=users.find(u=>u.email.toLowerCase()===email.toLowerCase()&&u.password===pass);
+  
+  try {
+    const result = await ApiClient.login(email, pass);
     setLoading('loginBtn',false);
-    if(user){setSession({email:user.email,first:user.first,last:user.last});localStorage.setItem('biyahero_current_user', user.email);openModal({type:'success',icon:'🎉',title:'Maligayang Pagbabalik!',body:`Kamusta, ${user.first}! Ikaw ay matagumpay na naka-login. Papunta ka na sa Biyahero Guide…`,actions:[{label:'Tuloy na!',primary:true,fn:()=>{closeModal();setTimeout(()=>{location.href=new URLSearchParams(location.search).get('redirect')||'../index.php';},300);}}]});}
-    else{openModal({type:'error',icon:'🔐',title:'Mali ang Credentials',body:'Hindi namin makilala ang email o password na iyong inilagay. Subukan muli o mag-sign up.',actions:[{label:'Subukan Muli',primary:true,fn:closeModal},{label:'Mag-sign up',primary:false,fn:()=>{closeModal();switchTab('register');}}]});}
-  },1000);
+    
+    if(result.success) {
+      const firstName = result.data.firstName || 'User';
+      setSession({email:result.data.email,first:firstName,last:result.data.lastName});
+      localStorage.setItem('biyahero_current_user', result.data.email);
+      openModal({type:'success',icon:'🎉',title:'Maligayang Pagbabalik!',body:`Kamusta, ${firstName}! Ikaw ay matagumpay na naka-login. Papunta ka na sa Biyahero Guide…`,actions:[{label:'Tuloy na!',primary:true,fn:()=>{closeModal();setTimeout(()=>{location.href=new URLSearchParams(location.search).get('redirect')||'../index.php';},300);}}]});
+    } else {
+      openModal({type:'error',icon:'🔐',title:'Mali ang Credentials',body:result.message || 'Hindi namin makilala ang email o password na iyong inilagay. Subukan muli o mag-sign up.',actions:[{label:'Subukan Muli',primary:true,fn:closeModal},{label:'Mag-sign up',primary:false,fn:()=>{closeModal();switchTab('register');}}]});
+    }
+  } catch(error) {
+    setLoading('loginBtn',false);
+    openModal({type:'error',icon:'⚠️',title:'Error sa Login',body:'Nagkaroon ng error sa pag-connect sa server. Pakisubukan muli.',actions:[{label:'Subukan Muli',primary:true,fn:closeModal}]});
+  }
 }
 
 function doRegister(e) {
