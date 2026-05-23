@@ -714,7 +714,11 @@ async function doLogin(e) {
   }
 }
 
+<<<<<<< HEAD
 async function doRegister(e) {
+=======
+function doRegister(e) {
+>>>>>>> origin/main
   if(e)addRipple(e.currentTarget,e);
   const first=document.getElementById('regFirst').value.trim(), last=document.getElementById('regLast').value.trim();
   const email=document.getElementById('regEmail').value.trim(), pass=document.getElementById('regPass').value, pass2=document.getElementById('regPass2').value, errs=[];
@@ -725,6 +729,7 @@ async function doRegister(e) {
   if(pass!==pass2)errs.push('Hindi magkapareho ang mga password. Subukan muli.');
   if(errs.length){openModal({type:'error',icon:'📋',title:'Hindi Makapag-sign up',body:'Mangyaring ayusin ang mga sumusunod bago magpatuloy:',errors:errs,actions:[{label:'Ayusin',primary:true,fn:closeModal}]});return;}
   setLoading('regBtn',true);
+<<<<<<< HEAD
   
   try {
     const result = await ApiClient.register(email, pass, first, last);
@@ -741,6 +746,20 @@ async function doRegister(e) {
     setLoading('regBtn',false);
     openModal({type:'error',icon:'⚠️',title:'Error sa Registration',body:'Nagkaroon ng error sa pag-connect sa server. Pakisubukan muli.',actions:[{label:'Subukan Muli',primary:true,fn:closeModal}]});
   }
+=======
+  setTimeout(()=>{
+    setLoading('regBtn',false);
+    const users=getUsers();
+    if(users.find(u=>u.email.toLowerCase()===email.toLowerCase())){openModal({type:'error',icon:'📧',title:'Email Ay Rehistrado Na',body:'Ang email address na ito ay may kasalukuyang account na. Subukang mag-login na lang.',actions:[{label:'Mag-login na lang',primary:true,fn:()=>{closeModal();switchTab('login');}},{label:'Ibang Email',primary:false,fn:closeModal}]});return;}
+    users.push({email,password:pass,first,last}); saveUsers(users); setSession({email,first,last});
+    // Initialize subscription with 1-month free trial
+    if(typeof SubscriptionManager !== 'undefined') {
+      SubscriptionManager.initSubscription(email);
+      localStorage.setItem('biyahero_current_user', email);
+    }
+    openModal({type:'success',icon:'🎊',title:'Maligayang Pagdating, '+first+'!',body:'Ang iyong account ay matagumpay na nagawa. Ikaw ay nire-redirect sa Biyahero Guide ngayon…',actions:[{label:'Simulan Na!',primary:true,fn:()=>{closeModal();setTimeout(()=>{location.href=new URLSearchParams(location.search).get('redirect')||'../index.php';},300);}}]});
+  },1000);
+>>>>>>> origin/main
 }
 
 function openForgot(e) {

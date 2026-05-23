@@ -3,8 +3,8 @@
  * Handles communication with PHP backend
  */
 
-// Use absolute path from web root for reliability
-const API_BASE = '/biyaheroguide/biyahero/api';
+// Determine the correct API base path based on current location
+const API_BASE = window.location.pathname.includes('/biyahero/') ? '../../api' : '/biyaheroguide/api';
 
 const ApiClient = {
     // Authentication
