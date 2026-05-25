@@ -244,6 +244,10 @@
     .form-header h2 { font-size:1.65rem; font-weight:900; letter-spacing:-0.02em; color:var(--text); margin-bottom:5px; }
     .form-header p  { font-size:13px; color:var(--muted); line-height:1.65; }
 
+    .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--muted); text-decoration:none; font-size:13px; font-weight:600; margin-bottom:16px; transition:color 0.2s; }
+    .back-link:hover { color:var(--green); }
+    .back-link svg { width:16px; height:16px; }
+
     .tab-toggle {
       display:flex; background:#EAEDEE; border-radius:13px;
       padding:4px; margin-bottom:26px; gap:3px; position:relative;
@@ -456,6 +460,11 @@
   <!-- RIGHT FORM -->
   <div class="form-side">
     <div class="form-inner">
+
+      <a href="guestpage.php" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Bumalik
+      </a>
 
       <div class="form-header">
         <h2>Mag-login sa Biyahero</h2>
@@ -703,7 +712,7 @@ async function doLogin(e) {
     if(result.success) {
       const firstName = result.data.firstName || 'User';
       setSession({email:result.data.email,first:firstName,last:result.data.lastName});
-      localStorage.setItem('biyahero_current_user', result.data.email);
+      localStorage.setItem('biyahero_user_email', result.data.email);
       openModal({type:'success',icon:'🎉',title:'Maligayang Pagbabalik!',body:`Kamusta, ${firstName}! Ikaw ay matagumpay na naka-login. Papunta ka na sa Biyahero Guide…`,actions:[{label:'Tuloy na!',primary:true,fn:()=>{closeModal();setTimeout(()=>{location.href=new URLSearchParams(location.search).get('redirect')||'../index.php';},300);}}]});
     } else {
       openModal({type:'error',icon:'🔐',title:'Mali ang Credentials',body:result.message || 'Hindi namin makilala ang email o password na iyong inilagay. Subukan muli o mag-sign up.',actions:[{label:'Subukan Muli',primary:true,fn:closeModal},{label:'Mag-sign up',primary:false,fn:()=>{closeModal();switchTab('register');}}]});
@@ -732,7 +741,7 @@ async function doRegister(e) {
     
     if(result.success) {
       setSession({email:result.data.email,first:result.data.firstName,last:result.data.lastName});
-      localStorage.setItem('biyahero_current_user', result.data.email);
+      localStorage.setItem('biyahero_user_email', result.data.email);
       openModal({type:'success',icon:'🎊',title:'Maligayang Pagdating, '+first+'!',body:'Ang iyong account ay matagumpay na nagawa. Ikaw ay nire-redirect sa Biyahero Guide ngayon…',actions:[{label:'Simulan Na!',primary:true,fn:()=>{closeModal();setTimeout(()=>{location.href=new URLSearchParams(location.search).get('redirect')||'../index.php';},300);}}]});
     } else {
       openModal({type:'error',icon:'📧',title:'Hindi Makapag-sign up',body:result.message || 'Nagkaroon ng error sa pagrehistro. Subukan muli.',actions:[{label:'Subukan Muli',primary:true,fn:closeModal},{label:'Mag-login',primary:false,fn:()=>{closeModal();switchTab('login');}}]});

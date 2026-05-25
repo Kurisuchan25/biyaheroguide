@@ -1092,3 +1092,48 @@
     transform: none !important;
     box-shadow: none !important;
 }
+
+/* -------------------------------------------------------
+   REDIRECT TOAST NOTIFICATION
+   ------------------------------------------------------- */
+
+.bh-redirect-toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%);
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(27, 67, 50, 0.3);
+    z-index: 12000;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.bh-redirect-toast.bh-toast--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.bh-toast-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bh-toast-icon {
+    font-size: 1.2rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.bh-toast-message {
+    font-size: 14px;
+    font-weight: 600;
+}

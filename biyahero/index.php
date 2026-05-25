@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css">
-    <link rel="stylesheet" href="css/subscription.css">
+    <link rel="stylesheet" href="subscription/subscription.css">
     <script src="js/api.js"></script>
     <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js" type="module"></script>
     <style>
@@ -773,6 +773,45 @@
                 .hero-right dotlottie-wc{max-width:280px;max-height:280px;width:100%;height:auto;}
                 .hero{padding-top:100px;}
             }
+
+        /* Navbar Subscription Styles */
+        /* ── NAV SUBSCRIPTION AREA ── */
+        .nav-upgrade-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gold);
+            color: var(--green);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.22s;
+            box-shadow: 0 2px 10px rgba(244,196,48,0.35);
+            font-family: 'DM Sans', sans-serif;
+        }
+        .nav-upgrade-btn:hover {
+            background: #fff;
+            box-shadow: 0 4px 18px rgba(244,196,48,0.5);
+            transform: translateY(-1px);
+        }
+        .upgrade-icon { font-size: 14px; }
+        .upgrade-text { font-size: 13px; }
+
+        /* sub-status-badge inside nav (dark bg context) */
+        .nav .sub-status-badge {
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        @media(max-width: 768px) {
+            .nav .sub-status-badge { display: none !important; }
+            .nav-upgrade-btn { padding: 7px 12px; }
+            .upgrade-text { display: none; }
+        }
         </style>
     </head>
     <body>
@@ -889,7 +928,19 @@
             </ul>
 
             <div class="nav-actions">
-                <div class="subscription-status" id="subscriptionStatus"></div>
+
+                <!-- Subscription Status Badge — updated by SubscriptionManager.updateStatusIndicator() -->
+                <a href="subscription/subscription.php"
+                   id="subStatusBadge"
+                   class="sub-status-badge badge-free"
+                   title="Manage Subscription">🔒 Free</a>
+
+                <!-- Upgrade / Manage button — label toggled by JS -->
+                <button class="nav-upgrade-btn" id="navUpgradeBtn"
+                        onclick="SubscriptionManager.openUpgradeModal()">
+                    <span class="upgrade-icon">⚡</span>
+                    <span class="upgrade-text">Upgrade</span>
+                </button>
 
                 <!-- My Profile Dropdown -->
                 <div class="profile-li" id="profileNavItem" style="position:relative;display:flex;align-items:center;">
@@ -900,11 +951,12 @@
                     </button>
                     <div class="profile-drop" id="profileDrop">
                         <div class="profile-drop-header">
-                            <div class="profile-drop-name">Biyahero User</div>
-                            <div class="profile-drop-email">user@biyahero.app</div>
+                            <div class="profile-drop-name" id="profileDropName">Biyahero User</div>
+                            <div class="profile-drop-email" id="profileDropEmail">user@biyahero.app</div>
                         </div>
                         <a href="#account"><span>👤</span> My Account</a>
                         <a href="#settings"><span>⚙️</span> Settings</a>
+                        <a href="subscription/subscription.php"><span>⚡</span> Subscription</a>
                         <div class="profile-drop-div"></div>
                         <button class="profile-logout" type="button" onclick="doLogout(); return false;"><span>🚪</span> Log Out</button>
                     </div>
@@ -1942,6 +1994,8 @@
             kaypian:{jeepney:{base:16,range:'₱13–20',time:'18–28 min',steps:['SJDM Bayan → Jeepney → Kaypian']},tricycle:{base:45,range:'₱40–55',time:'16–24 min',steps:['Tricycle to Kaypian']},multicab:{base:20,range:'₱18–25',time:'15–22 min',steps:['Multicab to Kaypian']}}
         }
     };
+    /* Expose fareMatrix globally so subscription.js can read it */
+    window.fareData = fareMatrix;
 
     /* ─── RENDER ROUTES ─── */
     function renderRoutes(){
@@ -2094,16 +2148,170 @@
         document.getElementById('plannerResult').innerHTML=html;
     });
 
-    /* ─── FARE CALCULATOR ─── */
-    let pax=1;
-    document.getElementById('paxPlus').addEventListener('click',()=>{if(pax<10){pax++;document.getElementById('paxCount').textContent=pax;}});
-    document.getElementById('paxMinus').addEventListener('click',()=>{if(pax>1){pax--;document.getElementById('paxCount').textContent=pax;}});
-    document.getElementById('swapBtn').addEventListener('click',()=>{
-        const f=document.getElementById('calcFrom'),t=document.getElementById('calcTo');
-        const tmp=f.value;f.value=t.value;t.value=tmp;
+    document.getElementById('swapBtn').addEventListener('click', () => {
+        const f = document.getElementById('calcFrom'), t = document.getElementById('calcTo');
+        const tmp = f.value; f.value = t.value; t.value = tmp;
     });
-    /* calcBtn is now handled by patchFareCalculatorWithSubscription() in subscription.js
-       which intercepts the click, shows the plan modal, then runs the fare calculation. */
+
+    /* ─── FARE CALCULATOR — runFareCalc() ─── */
+    /* Called by SubscriptionManager.patchFareCalculator() AFTER access is confirmed.
+       The #calcBtn click is intercepted by the subscription gate — this function
+       contains only the pure calculation logic. */
+    let pax = 1;
+    document.getElementById('paxPlus').addEventListener('click', () => { if (pax < 10) { pax++; document.getElementById('paxCount').textContent = pax; } });
+    document.getElementById('paxMinus').addEventListener('click', () => { if (pax > 1) { pax--; document.getElementById('paxCount').textContent = pax; } });
+
+    /* ─── SMART FARE ESTIMATOR ─── 
+       Assigns every location a zone + nearest hub so we can estimate
+       fare for ANY origin→destination pair, even without exact matrix data. */
+    const LOCATION_ZONE = {
+        // Zone 1 — Major hubs (base fare ₱13)
+        tungko: 1, muzon: 1, sjdm_bayan: 1, grotto: 1,
+        // Zone 2 — Near hubs (₱15–20)
+        kaypian: 2, sapang_palay: 2, tungkong_mangga: 2, muzon_east: 2, muzon_west: 2,
+        bagong_buhay: 2, bagong_buhay_homes: 2, starmall_sjdm: 2, sm_city_sjdm: 2,
+        poblacion: 2, santo_cristo: 2, citrus: 2, dulong_bayan: 2,
+        // Zone 3 — Mid-distance (₱18–28)
+        paradise: 3, minuyan: 3, san_manuel: 3, santo_nino: 3, sapang_palay_proper: 3,
+        fatima: 3, graceville: 3, gaya_gaya: 3, maharlika: 3, san_isidro: 3,
+        san_martin: 3, san_pedro: 3, san_rafael: 3, kaybanban: 3, kaytitinga: 3,
+        ciudad_real: 3, colinas_verdes: 3, camella_sjdm: 3, lessandra_sjdm: 3,
+        deca_homes: 3, greenfields: 3, residencia_de_muzon: 3, villa_antonio: 3,
+        francisco_homes_guijo: 3, francisco_homes_mulawin: 3,
+        francisco_homes_narra: 3, francisco_homes_yakal: 3,
+        // Zone 4 — Far / upland (₱25–40)
+        gumaoc_east: 4, gumaoc_central: 4, gumaoc_west: 4, san_jose_heights: 4,
+        katarungan_village: 4, garden_villas: 4, carissa_homes: 4, bellevue: 4,
+        metrogate_sjdm: 4, pleasant_hill: 4, the_gardens_sjdm: 4, lancaster_new_city: 4,
+        // Zone 5 — Remote / destinations (₱35–55)
+        amana_waterpark: 5, grotto_lourdes: 5, mt_balagbag: 5, kaytitinga_falls: 5,
+        // Fallback for anything unlisted
+        default: 3
+    };
+
+    const NEAREST_HUB = {
+        tungko: 'Tungko Terminal', muzon: 'Muzon Junction', sjdm_bayan: 'SJDM Bayan (City Hall)',
+        grotto: 'Grotto', kaypian: 'Kaypian Terminal', sapang_palay: 'Sapang Palay Terminal',
+        paradise: 'Muzon → Paradise', minuyan: 'Muzon → Minuyan',
+        san_manuel: 'Kaypian → San Manuel', gaya_gaya: 'Sapang Palay → Gaya-Gaya',
+        default: 'pinakamalapit na terminal'
+    };
+
+    function _estimateFare(from, to, mode) {
+        // First check exact fareMatrix data
+        if (window.fareData && window.fareData[from] && window.fareData[from][to] && window.fareData[from][to][mode]) {
+            return { exact: true, ...window.fareData[from][to][mode] };
+        }
+
+        // Smart zone-based estimation
+        const zoneFrom = LOCATION_ZONE[from] || LOCATION_ZONE.default;
+        const zoneTo   = LOCATION_ZONE[to]   || LOCATION_ZONE.default;
+        const zoneDiff = Math.abs(zoneFrom - zoneTo);
+
+        // Base fare table per zone difference
+        const baseFares = {
+            jeepney:  [0, 15, 20, 28, 38, 50],
+            tricycle: [0, 35, 50, 65, 85, 110],
+            multicab: [0, 20, 28, 38, 50, 70]
+        };
+        const timeTable  = ['—', '10–20 min', '18–30 min', '28–45 min', '40–60 min', '55–80 min'];
+        const idx = Math.min(Math.max(zoneDiff === 0 ? 1 : zoneDiff, 1), 5);
+
+        const base = baseFares[mode][idx];
+        const lo   = Math.round(base * 0.85 / 5) * 5;
+        const hi   = Math.round(base * 1.25 / 5) * 5;
+
+        // Build a plausible route description
+        const hubFrom = NEAREST_HUB[from] || NEAREST_HUB.default;
+        const toLabel = to.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        const steps = zoneDiff <= 1
+            ? [`Sakay ng ${mode === 'tricycle' ? 'tricycle' : 'jeepney/multicab'} papuntang ${toLabel}`]
+            : [`Pumunta sa ${hubFrom}`, `Sumakay papuntang ${toLabel}`];
+
+        return {
+            exact: false,
+            base,
+            range: `₱${lo}–${hi}`,
+            time: timeTable[idx],
+            steps
+        };
+    }
+
+    function runFareCalc() {
+        const from = document.getElementById('calcFrom').value;
+        const to   = document.getElementById('calcTo').value;
+        const mode = document.getElementById('calcMode').value;
+        const trip = parseInt(document.getElementById('calcTrip').value) || 1;
+        const result = document.getElementById('calcResult');
+
+        if (!from || !to) {
+            result.innerHTML = '<div class="calc-placeholder"><span>⚠️</span><p>Piliin ang origin at destination.</p></div>';
+            return;
+        }
+        if (from === to) {
+            result.innerHTML = '<div class="calc-placeholder"><span>😅</span><p>Pareho ang origin at destination!</p></div>';
+            return;
+        }
+
+        /* Track usage in subscription system */
+        if (typeof SubscriptionManager !== 'undefined') {
+            SubscriptionManager.trackCalculation();
+        }
+
+        const fareInfo  = _estimateFare(from, to, mode);
+        const modeLabel = mode === 'jeepney' ? '🚎 Jeepney' : mode === 'tricycle' ? '🛺 Tricycle' : '🚐 Multicab';
+        const tripLabel = trip > 1 ? 'Round Trip' : 'One-way';
+        const fromLabel = document.getElementById('calcFrom').options[document.getElementById('calcFrom').selectedIndex].text;
+        const toLabel   = document.getElementById('calcTo').options[document.getElementById('calcTo').selectedIndex].text;
+
+        /* Subscription plan info for the CTA strip */
+        let ctaHtml = '';
+        if (typeof SubscriptionManager !== 'undefined') {
+            const st = SubscriptionManager.getState();
+            if (st.status === 'active' || st.status === 'trial') {
+                const label = st.status === 'trial'
+                    ? `🎁 Free Trial — ${Math.max(0, Math.ceil((new Date(st.endDate) - new Date()) / 86400000))} araw na natitira`
+                    : `✅ ${st.plan ? (st.plan.charAt(0).toUpperCase() + st.plan.slice(1)) : 'Premium'} Plan — aktibo`;
+                ctaHtml = `<div style="margin-top:14px;background:rgba(27,67,50,0.06);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;flex-wrap:wrap;">
+                    <span>${label}</span>
+                    <a href="subscription/subscription.php" style="color:var(--green);font-weight:700;text-decoration:none;">Pamahalaan ang Plano →</a>
+                </div>`;
+            }
+        }
+
+        const totalFare = fareInfo.base * pax * trip;
+        const stepsHtml = fareInfo.steps && fareInfo.steps.length
+            ? `<div class="result-row"><span class="result-row-lbl">Route</span><span class="result-row-val" style="font-size:12px">📍 ${fareInfo.steps.join(' → ')}</span></div>`
+            : '';
+        const estimateNote = !fareInfo.exact
+            ? `<div style="font-size:11.5px;color:var(--muted);margin-top:8px;padding:8px 12px;background:rgba(244,196,48,0.08);border-radius:8px;border-left:3px solid var(--gold);">
+                ⚠️ <em>Estimated fare — exact data para sa route na ito ay hindi pa available. Ang aktwal na bayad ay depende sa driver.</em>
+               </div>`
+            : '';
+
+        const html = `<div class="result-output">
+            <div class="result-route-lbl">
+                <span>${modeLabel}</span>
+                <span style="font-size:12px;color:var(--muted);font-weight:500;">${tripLabel}</span>
+            </div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">
+                📍 ${fromLabel} → ${toLabel}
+            </div>
+            <div class="result-rows">
+                <div class="result-row"><span class="result-row-lbl">Base Fare × ${pax} pax${trip > 1 ? ' × 2 (round trip)' : ''}</span><span class="result-row-val">₱${totalFare}</span></div>
+                <div class="result-row"><span class="result-row-lbl">Fare Range (per person, one-way)</span><span class="result-row-val">${fareInfo.range}</span></div>
+                <div class="result-row"><span class="result-row-lbl">Estimated Travel Time</span><span class="result-row-val">⏱ ${fareInfo.time}</span></div>
+                ${stepsHtml}
+            </div>
+            <div class="result-total">
+                <span class="result-total-lbl">Estimated Total</span>
+                <span class="result-total-val">₱${totalFare}</span>
+            </div>
+            ${estimateNote}
+            ${ctaHtml}
+        </div>`;
+        result.innerHTML = html;
+    }
 
     /* ─── TERMINAL GUIDE ─── */
     function renderTerminal(key){
@@ -2383,15 +2591,6 @@
     initAnimations();
     lucide.createIcons();
 
-    /* ─── SUBSCRIPTION CHECK ─── */
-    const currentUser = localStorage.getItem('biyahero_current_user');
-    if(currentUser && typeof SubscriptionManager !== 'undefined'){
-        SubscriptionManager.updateStatusIndicator(currentUser);
-        if(!SubscriptionManager.hasAccess(currentUser)){
-            setTimeout(()=>{ SubscriptionManager.showPaymentModal(); }, 1000);
-        }
-    }
-
     /* ─── LOGOUT ─── */
     async function doLogout(){
         console.log('Logout function called');
@@ -2408,6 +2607,40 @@
         window.location.href = 'landingpage/login.php';
     }
     </script>
-    <script src="js/subscription.js"></script>
+
+    <!-- Subscription JS loaded LAST so DOM + inline scripts are ready -->
+    <script src="subscription/subscription.js"></script>
+    <script>
+    /* ─── SUBSCRIPTION INTEGRATION (runs after subscription.js loads) ─── */
+    (function () {
+        if (typeof SubscriptionManager === 'undefined') return;
+
+        var currentUser = null;
+        try {
+            var raw = localStorage.getItem('biyahero_current_user');
+            currentUser = raw ? JSON.parse(raw) : null;
+        } catch (e) {}
+
+        // ── KEY FIX: scope subscription state to the logged-in user ──
+        // Uses email (or id as fallback) so each registrant gets their own
+        // free trial and subscription — even on a shared device/browser.
+        if (currentUser) {
+            var userId = currentUser.email || currentUser.id || currentUser.username;
+            if (userId) SubscriptionManager.setUser(userId);
+        }
+
+        /* Update nav badge & upgrade button label */
+        SubscriptionManager.updateStatusIndicator(currentUser ? JSON.stringify(currentUser) : null);
+
+        /* Wire the #calcBtn to the full subscription gate logic.
+           SubscriptionManager.handleCalculateClick() decides:
+             A) Has active plan  → run immediately
+             B) First-time user  → show modal (free trial + paid plans)
+             C) Used free trial, expired → redirect to subscription.php */
+        SubscriptionManager.patchFareCalculator(function () {
+            runFareCalc();
+        });
+    })();
+    </script>
     </body>
     </html>
